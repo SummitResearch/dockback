@@ -1,0 +1,14 @@
+apply plugin: 'scala'
+apply plugin: 'spring-boot'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.scala-lang:scala-library:2.11.7"
+
+    compile project(":domain")
+
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+}

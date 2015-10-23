@@ -1,0 +1,7 @@
+include 'domain'
+include 'rest'
+include 'ui'
+include 'scheduler'
+include 'executors'
+
+rootProject.name = 'dockback'
