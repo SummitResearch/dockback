@@ -1,4 +1,11 @@
+apply plugin: 'spring-boot'
+
 dependencies {
+
+    compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.6.1'
+
+    compile "org.springframework.boot:spring-boot-starter-data-mongodb"
+    compile "org.springframework.boot:spring-boot-starter-amqp"
 
     compile project(":domain")
 
