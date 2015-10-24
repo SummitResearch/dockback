@@ -1,10 +1,29 @@
 buildscript {
+
     repositories {
         mavenCentral()
     }
+    
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
     }
+    
 }
 
 apply plugin: 'idea'
+
+subprojects {
+    
+    apply plugin: 'scala'
+    apply plugin: 'spring-boot'
+    apply plugin: 'idea'
+    
+    repositories {
+        mavenCentral()
+    }
+    
+    dependencies {
+        compile "org.scala-lang:scala-library:2.11.7"
+    }
+
+}
