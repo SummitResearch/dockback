@@ -11,13 +11,16 @@ buildscript {
 }
 
 apply plugin: 'idea'
+apply plugin: 'eclipse'
 
 subprojects {
     
     apply plugin: 'scala'
     apply plugin: 'spring-boot'
-    apply plugin: 'idea'
     
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
     repositories {
         mavenCentral()
     }
