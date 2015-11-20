@@ -1,10 +1,8 @@
-apply plugin: 'spring-boot'
 
 dependencies {
 
     compile "org.scala-lang:scala-library:2.11.7"
     compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.6.1'
 
-    compile "org.springframework.boot:spring-boot-starter-data-mongodb"
-
+    compile 'org.springframework.data:spring-data-mongodb:1.6.4.RELEASE'
 }
