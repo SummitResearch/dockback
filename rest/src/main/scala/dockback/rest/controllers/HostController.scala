@@ -1,10 +1,13 @@
 package dockback.rest.controllers
 
-import dockback.domain.Host
-import dockback.dto.{UpdateHostRequest, CreateHostRequest}
+import java.util
+
+import dockback.domain.{DockerImage, Host}
+import dockback.dto.{CreateHostRequest, UpdateHostRequest}
 import dockback.rest.repositories.HostRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation._
+import org.springframework.web.client.RestTemplate
 
 @RestController
 class HostController @Autowired() ( hostRepository: HostRepository ) {
@@ -57,5 +60,20 @@ class HostController @Autowired() ( hostRepository: HostRepository ) {
     updatedHost
 
   }
+
+  @RequestMapping(value = Array("/host/{id}/images"), method = Array(RequestMethod.GET))
+  def readAllImages( @PathVariable("id") id: String ) : String = {
+    val host = hostRepository.findOne( id )
+    val restTemplate = new RestTemplate()
+    return restTemplate.getForObject(s"http://${host.hostname}:2375/images/json", classOf[String])
+  }
+
+  @RequestMapping(value = Array("/host/{id}/containers"), method = Array(RequestMethod.GET))
+  def readAllContainers( @PathVariable("id") id: String ) : String = {
+    val host = hostRepository.findOne( id )
+    val restTemplate = new RestTemplate()
+    return restTemplate.getForObject(s"http://${host.hostname}:2375/containers/json", classOf[String])
+  }
+
 
 }
