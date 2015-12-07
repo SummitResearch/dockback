@@ -1,17 +1,17 @@
 var request = require('request');
 
 if( process.argv.length != 4 ) {
-    console.log( "Usage: get_host restHost dockerHostId" );
+    console.log( "Usage: delete_host restHost dockerHostId" );
 } else {
 
     var restHost = process.argv[2];
     var dockerHostId = process.argv[3];
 
-    console.log( "Getting all docker host on: " + restHost + " with id: " + dockerHostId );
+    console.log( "Deleting docker host on: " + restHost + " with id: " + dockerHostId );
 
     var options = {
         uri: 'https://' + restHost + ':8443/host/' + dockerHostId,
-        method: 'GET',
+        method: 'DELETE',
         headers: {
             'Authorization': 'Basic ' + new Buffer('admin:Awesome123!').toString('base64')
         },

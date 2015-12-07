@@ -15,3 +15,6 @@ Running HOST Commands
     Get host by ID
         host\get_host.js <restHost> <dockerHostId>
 
+    Delete host by ID
+        host\delete_host.js <restHost> <dockerHostId>
+
