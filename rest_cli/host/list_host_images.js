@@ -1,25 +1,17 @@
 var request = require('request');
 
-if( process.argv.length != 7 ) {
-    console.log( "Usage: update_host restHost dockerHostId dockerHost sshUser sshPassword" );
+if( process.argv.length != 4 ) {
+    console.log( "Usage: list_host_images restHost dockerHostId" );
 } else {
 
     var restHost = process.argv[2];
     var dockerHostId = process.argv[3];
-    var dockerHost = process.argv[4];
-    var sshUser = process.argv[5];
-    var sshPassword = process.argv[6];
 
-    console.log( "Creating new host for: " + dockerHost + " on " + restHost );
+    console.log( "Getting all docker host images on: " + restHost + " for id: " + dockerHostId );
 
     var options = {
-        uri: 'https://' + restHost + ':8443/host/' + dockerHostId,
-        method: 'PUT',
-        json: {
-            "hostname": dockerHost,
-            "sshUser": sshUser,
-            "sshPassword": sshPassword
-        },
+        uri: 'https://' + restHost + ':8443/host/' + dockerHostId + '/images',
+        method: 'GET',
         headers: {
             'Authorization': 'Basic ' + new Buffer('admin:Awesome123!').toString('base64')
         },
