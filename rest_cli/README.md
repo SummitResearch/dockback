@@ -18,3 +18,5 @@ Running HOST Commands
     Delete host by ID
         host\delete_host.js <restHost> <dockerHostId>
 
+    Update host by ID
+        host\create_host.js <restHost> <dockerHostId> <dockerHost> <sshUser> <sshPassword>
