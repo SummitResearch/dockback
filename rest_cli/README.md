@@ -9,4 +9,5 @@ Running HOST Commands
     Create a new host
         host\create_host.js <restHost> <dockerHost> <sshUser> <sshPassword>
      
-
+    Get all hosts
+        host\get_all_hosts.js <restHost>
