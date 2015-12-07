@@ -19,4 +19,12 @@ Running HOST Commands
         host\delete_host.js <restHost> <dockerHostId>
 
     Update host by ID
-        host\create_host.js <restHost> <dockerHostId> <dockerHost> <sshUser> <sshPassword>
+        host\update_host.js <restHost> <dockerHostId> <dockerHost> <sshUser> <sshPassword>
+        
+    List images by dockerHost ID
+        host\list_host_images.js <restHost> <dockerHostId>
+        
+    List containers by dockerHost ID
+        host\list_host_containers.js <restHost> <dockerHostId>
+        
+        
