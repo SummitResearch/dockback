@@ -11,3 +11,7 @@ Running HOST Commands
      
     Get all hosts
         host\get_all_hosts.js <restHost>
+        
+    Get host by ID
+        host\get_host.js <restHost> <dockerHostId>
+
