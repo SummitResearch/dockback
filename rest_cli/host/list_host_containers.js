@@ -10,7 +10,7 @@ if( process.argv.length != 4 ) {
     console.log( "Getting all docker host images on: " + restHost + " for id: " + dockerHostId );
 
     var options = {
-        uri: 'https://' + restHost + ':8443/host/' + dockerHostId + '/containers',
+        uri: 'https://' + restHost + ':8443/host/' + dockerHostId + '/container',
         method: 'GET',
         headers: {
             'Authorization': 'Basic ' + new Buffer('admin:Awesome123!').toString('base64')
