@@ -6,6 +6,8 @@ import dockback.domain.{DockerImage, Host}
 import dockback.dto.{CreateHostRequest, UpdateHostRequest}
 import dockback.rest.repositories.HostRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DuplicateKeyException
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation._
 import org.springframework.web.client.RestTemplate
 
@@ -75,5 +77,9 @@ class HostController @Autowired() ( hostRepository: HostRepository ) {
     return restTemplate.getForObject(s"http://${host.hostname}:2375/containers/json", classOf[String])
   }
 
+
+  @ResponseStatus(value = HttpStatus.CONFLICT, reason = "duplicate field")
+  @ExceptionHandler(Array(classOf[DuplicateKeyException]))
+  def duplicateField() {}
 
 }
