@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation._
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.{RestClientException, RestTemplate}
 
 @RestController
 class HostController @Autowired() ( hostRepository: HostRepository ) {
@@ -67,6 +67,7 @@ class HostController @Autowired() ( hostRepository: HostRepository ) {
   def readAllImages( @PathVariable("id") id: String ) : String = {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
+
     return restTemplate.getForObject(s"http://${host.hostname}:2375/images/json", classOf[String])
   }
 
@@ -81,5 +82,9 @@ class HostController @Autowired() ( hostRepository: HostRepository ) {
   @ResponseStatus(value = HttpStatus.CONFLICT, reason = "duplicate field")
   @ExceptionHandler(Array(classOf[DuplicateKeyException]))
   def duplicateField() {}
+
+  @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE, reason = "docker host unavailable")
+  @ExceptionHandler(Array(classOf[RestClientException]))
+  def dockerHostUnavailable() {}
 
 }
