@@ -61,14 +61,14 @@ class HostController @Autowired() ( hostRepository: HostRepository ) {
 
   }
 
-  @RequestMapping(value = Array("/host/{id}/images"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/host/{id}/image"), method = Array(RequestMethod.GET))
   def readAllImages( @PathVariable("id") id: String ) : String = {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
     return restTemplate.getForObject(s"http://${host.hostname}:2375/images/json", classOf[String])
   }
 
-  @RequestMapping(value = Array("/host/{id}/containers"), method = Array(RequestMethod.GET))
+  @RequestMapping(value = Array("/host/{id}/container"), method = Array(RequestMethod.GET))
   def readAllContainers( @PathVariable("id") id: String ) : String = {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
