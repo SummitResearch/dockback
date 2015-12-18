@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 import scala.annotation.meta.field
 
-
 @Document
 case class Host(
    id: String,
