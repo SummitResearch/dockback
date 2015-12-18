@@ -11,6 +11,7 @@ case class Host(
    id: String,
    @(Indexed@field)(unique = true)
    hostname: String,
+   port: Int,
    sshUser: String,
    sshPassword: String
 )

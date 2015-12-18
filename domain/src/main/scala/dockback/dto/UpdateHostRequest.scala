@@ -1,3 +1,3 @@
 package dockback.dto
 
-case class UpdateHostRequest( id: String, hostname: String, sshUser: String, sshPassword: String )
+case class UpdateHostRequest( id: String, port: Int, hostname: String, sshUser: String, sshPassword: String )
