@@ -20,6 +20,7 @@ class HostController @Autowired() ( hostRepository: HostRepository ) {
     val newHost = new Host(
       id = null,
       hostname = request.hostname,
+      port = request.port,
       sshUser = request.sshUser,
       sshPassword = request.sshPassword
     )
@@ -53,6 +54,7 @@ class HostController @Autowired() ( hostRepository: HostRepository ) {
     val updatedHost = new Host(
       id = device.id,
       hostname = request.hostname,
+      port = request.port,
       sshUser = request.sshUser,
       sshPassword = request.sshPassword
     )
@@ -68,14 +70,14 @@ class HostController @Autowired() ( hostRepository: HostRepository ) {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
 
-    return restTemplate.getForObject(s"http://${host.hostname}:2375/images/json", classOf[String])
+    return restTemplate.getForObject(s"http://${host.hostname}:${host.port}/images/json", classOf[String])
   }
 
   @RequestMapping(value = Array("/host/{id}/container"), method = Array(RequestMethod.GET))
   def readAllContainers( @PathVariable("id") id: String ) : String = {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
-    return restTemplate.getForObject(s"http://${host.hostname}:2375/containers/json", classOf[String])
+    return restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/json", classOf[String])
   }
 
 
