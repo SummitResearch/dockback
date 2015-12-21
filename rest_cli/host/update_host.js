@@ -1,14 +1,15 @@
 var request = require('request');
 
-if( process.argv.length != 7 ) {
-    console.log( "Usage: update_host restHost dockerHostId dockerHost sshUser sshPassword" );
+if( process.argv.length != 8 ) {
+    console.log( "Usage: update_host restHost dockerHostId dockerHost dockerPort sshUser sshPassword" );
 } else {
 
     var restHost = process.argv[2];
     var dockerHostId = process.argv[3];
     var dockerHost = process.argv[4];
-    var sshUser = process.argv[5];
-    var sshPassword = process.argv[6];
+    var dockerPort = process.argv[5];
+    var sshUser = process.argv[6];
+    var sshPassword = process.argv[7];
 
     console.log( "Creating new host for: " + dockerHost + " on " + restHost );
 
