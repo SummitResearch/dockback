@@ -26,6 +26,9 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter"
 
+    compile "org.quartz-scheduler:quartz:2.2.2"
+    compile "org.quartz-scheduler:quartz-jobs:2.2.2"
+
     testCompile "org.springframework.boot:spring-boot-starter-test"
 
 }
