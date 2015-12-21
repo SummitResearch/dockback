@@ -1,7 +1,7 @@
 package dockback.rest.controllers
 
-import dockback.domain.{ Policy}
-import dockback.dto.{UpdatePolicyRequest, CreatePolicyRequest}
+import dockback.domain.Policy
+import dockback.dto.{CreatePolicyRequest, UpdatePolicyRequest}
 import dockback.rest.repositories.PolicyRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DuplicateKeyException

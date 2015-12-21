@@ -1,8 +1,6 @@
 package dockback.rest.controllers
 
-import java.util
-
-import dockback.domain.{DockerImage, Host}
+import dockback.domain.Host
 import dockback.dto.{CreateHostRequest, UpdateHostRequest}
 import dockback.rest.repositories.HostRepository
 import org.springframework.beans.factory.annotation.Autowired
