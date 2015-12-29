@@ -2,7 +2,7 @@ package dockback.rest.controllers
 
 import dockback.domain.Host
 import dockback.dto.{CreateHostRequest, UpdateHostRequest}
-import dockback.rest.repositories.HostRepository
+import dockback.rest.repositories.{ContainerRepository, ImageRepository, HostRepository}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.http.HttpStatus
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{RestClientException, RestTemplate}
 
 @RestController
-class HostController @Autowired() ( hostRepository: HostRepository ) {
+class HostController @Autowired() ( hostRepository: HostRepository, imageRepository: ImageRepository, containerRepository: ContainerRepository ) {
 
   @RequestMapping(value = Array("/host"), method = Array(RequestMethod.POST))
   def create(@RequestBody request: CreateHostRequest ) : Host = {
