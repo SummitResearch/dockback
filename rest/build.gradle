@@ -9,6 +9,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-amqp"
     compile "org.springframework.boot:spring-boot-starter-security"
 
+    compile "com.typesafe.play:play-json_2.11:2.4.6"
+
     compile project(":domain")
 
     testCompile "org.springframework.boot:spring-boot-starter-test"
