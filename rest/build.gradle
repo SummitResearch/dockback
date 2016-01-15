@@ -1,4 +1,5 @@
 apply plugin: 'spring-boot'
+apply plugin: "com.github.maiflai.scalatest"
 
 dependencies {
 
@@ -14,5 +15,9 @@ dependencies {
     compile project(":domain")
 
     testCompile "org.springframework.boot:spring-boot-starter-test"
+
+    testCompile "org.scalatest:scalatest_2.11:2.2.6"
+    testCompile "org.scalactic:scalactic_2.11:2.2.6"
+    testRuntime 'org.pegdown:pegdown:1.1.0'
     
 }

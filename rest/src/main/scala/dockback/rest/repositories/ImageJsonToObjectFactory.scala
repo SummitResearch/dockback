@@ -12,9 +12,11 @@ object ImageJsonToObjectFactory {
 
   def parseImage( imageJson: String ) : Image = {
 
-    JsPath
+    val json: JsValue = Json.parse(imageJson)
 
-    Image("", "", "", Array(""), 0L)
+    val id = (json \ "Id").get.asInstanceOf[JsString].value
+
+    Image(id, "", "", Array(""), 0L)
 
   }
 
