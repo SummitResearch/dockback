@@ -14,9 +14,14 @@ object ImageJsonToObjectFactory {
 
     val json: JsValue = Json.parse(imageJson)
 
-    val id = (json \ "Id").get.asInstanceOf[JsString].value
+    val imageId = (json \ "Id").as[String]
+    val parentId = (json \ "ParentId").as[String]
 
-    Image(id, "", "", Array(""), 0L)
+    val repoTags = (json \ "RepoTags" ).as[Array[String]]
+
+    val createdTime = (json \ "Created").as[Long]
+
+    Image("", imageId, parentId, repoTags, createdTime)
 
   }
 
