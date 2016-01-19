@@ -12,22 +12,34 @@ object ImageJsonToObjectFactory {
 
   def parseImage( imageJson: String ) : Image = {
 
-    val json: JsValue = Json.parse(imageJson)
+    val jsImage: JsValue = Json.parse(imageJson)
 
-    val imageId = (json \ "Id").as[String]
-    val parentId = (json \ "ParentId").as[String]
-
-    val repoTags = (json \ "RepoTags" ).as[Array[String]]
-
-    val createdTime = (json \ "Created").as[Long]
-
-    Image("", imageId, parentId, repoTags, createdTime)
+    extractImage(jsImage)
 
   }
 
-  def parseImages( imagesJson: String ) : java.util.List[Image] = {
+  private def extractImage(jsImage: JsValue): Image = {
+    val imageId = (jsImage \ "Id").as[String]
+    val parentId = (jsImage \ "ParentId").as[String]
 
-    new util.ArrayList[Image]()
+    val repoTags = (jsImage \ "RepoTags").as[Array[String]]
+
+    val createdTime = (jsImage \ "Created").as[Long]
+
+    Image("", imageId, parentId, repoTags, createdTime)
+  }
+
+  def parseImages(imagesJson: String ) : java.util.List[Image] = {
+
+    val images = new util.ArrayList[Image]()
+
+    val jsImages = Json.parse(imagesJson)
+
+    for ( image <- jsImages.as[Array[JsValue]] ) {
+      images.add( extractImage(image) )
+    }
+
+    images
 
   }
 }
