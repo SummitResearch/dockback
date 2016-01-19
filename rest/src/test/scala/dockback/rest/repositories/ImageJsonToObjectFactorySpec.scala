@@ -41,5 +41,8 @@ class ImageJsonToObjectFactorySpec extends BaseSpec {
       assert(image.created == 1447115707)
 
     }
+    scenario("parse an array of images") {
+
+    }
   }
 }
