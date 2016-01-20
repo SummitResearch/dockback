@@ -16,7 +16,7 @@ object ContainerJsonToObjectFactory extends ContainerExtractor {
 
   }
 
-  def parseImages(containersJson: String ) : java.util.List[Container] = {
+  def parseContainers(containersJson: String ) : java.util.List[Container] = {
 
     val containers = new util.ArrayList[Container]()
 
