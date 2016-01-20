@@ -8,25 +8,14 @@ import play.api.libs.json._ // JSON library
 import play.api.libs.json.Reads._ // Custom validation helpers
 import play.api.libs.functional.syntax._ // Combinator syntax
 
-object ImageJsonToObjectFactory {
+object ImageJsonToObjectFactory extends ImageExtractor {
 
   def parseImage( imageJson: String ) : Image = {
 
     val jsImage: JsValue = Json.parse(imageJson)
 
-    extractImage(jsImage)
+    extract(jsImage)
 
-  }
-
-  private def extractImage(jsImage: JsValue): Image = {
-    val imageId = (jsImage \ "Id").as[String]
-    val parentId = (jsImage \ "ParentId").as[String]
-
-    val repoTags = (jsImage \ "RepoTags").as[Array[String]]
-
-    val createdTime = (jsImage \ "Created").as[Long]
-
-    Image("", imageId, parentId, repoTags, createdTime)
   }
 
   def parseImages(imagesJson: String ) : java.util.List[Image] = {
@@ -36,7 +25,7 @@ object ImageJsonToObjectFactory {
     val jsImages = Json.parse(imagesJson)
 
     for ( image <- jsImages.as[Array[JsValue]] ) {
-      images.add( extractImage(image) )
+      images.add( extract(image) )
     }
 
     images
