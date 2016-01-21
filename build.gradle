@@ -28,6 +28,9 @@ subprojects {
 
     repositories {
         mavenCentral()
+        maven {
+            url "http://www.janalyse.fr/repository/"
+        }
     }
     
     dependencies {
