@@ -3,7 +3,7 @@ package dockback.rest.repositories
 import dockback.domain.Image
 import play.api.libs.json.JsValue
 
-trait ImageExtractor {
+trait ImageExtractor extends Extractor {
 
   def extract(jsImage: JsValue): Image = {
     val imageId = (jsImage \ "Id").as[String]
