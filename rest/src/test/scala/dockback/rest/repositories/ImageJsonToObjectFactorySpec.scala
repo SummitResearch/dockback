@@ -22,8 +22,8 @@ class ImageJsonToObjectFactorySpec extends BaseSpec {
 
       assert(image.isInstanceOf[Image])
 
-      And( "the ID should be empty")
-      assert(image.id.equals( "" ))
+      And( "the ID should be null")
+      assert(null == image.id)
 
       And( "the image ID should be 'e9ae3c220b23b699cb5e6914af806219b028c78d5cf6fed8eeca98ffaa8c9b43'")
       assert(image.imageId.equals( "e9ae3c220b23b699cb5e6914af806219b028c78d5cf6fed8eeca98ffaa8c9b43" ))
@@ -57,8 +57,8 @@ class ImageJsonToObjectFactorySpec extends BaseSpec {
 
       val image = images.get(0)
 
-      And( "the ID should be empty")
-      assert(image.id.equals( "" ))
+      And( "the ID should be null")
+      assert(null == image.id)
 
       And( "the image ID should be 'e9ae3c220b23b699cb5e6914af806219b028c78d5cf6fed8eeca98ffaa8c9b43'")
       assert(image.imageId.equals( "e9ae3c220b23b699cb5e6914af806219b028c78d5cf6fed8eeca98ffaa8c9b43" ))
