@@ -3,10 +3,8 @@ package dockback.rest.repositories
 import java.util
 
 import dockback.domain.Image
-
-import play.api.libs.json._ // JSON library
-import play.api.libs.json.Reads._ // Custom validation helpers
-import play.api.libs.functional.syntax._ // Combinator syntax
+import play.api.libs.json.Reads._
+import play.api.libs.json._ // Combinator syntax
 
 object ImageJsonToObjectFactory extends ImageExtractor {
 
