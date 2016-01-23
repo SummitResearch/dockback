@@ -13,7 +13,7 @@ trait ImageExtractor extends Extractor {
 
     val createdTime = (jsImage \ "Created").as[Long]
 
-    Image("", imageId, parentId, repoTags, createdTime)
+    Image(null, imageId, parentId, repoTags, createdTime)
   }
 
 }

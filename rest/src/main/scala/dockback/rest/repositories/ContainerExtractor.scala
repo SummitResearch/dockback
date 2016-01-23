@@ -14,7 +14,7 @@ trait ContainerExtractor {
     val created = (jsContainer \ "Created").as[Long]
     val status = (jsContainer \ "Status").as[String]
     ;
-    Container("", containerId, names, image, imageId, created, status)
+    Container(null, containerId, names, image, imageId, created, status)
 
   }
 

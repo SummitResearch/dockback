@@ -1,16 +1,24 @@
 package dockback.rest.controllers
 
-import dockback.domain.Host
+import java.util
+
+import com.mongodb.casbah.commons.Logger
+import dockback.domain.{Container, Image, Host}
 import dockback.dto.{CreateHostRequest, UpdateHostRequest}
-import dockback.rest.repositories.{ContainerRepository, ImageRepository, HostRepository}
+import dockback.rest.repositories._
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{RestClientException, RestTemplate}
 
+import collection.JavaConversions._
+
 @RestController
 class HostController @Autowired() ( hostRepository: HostRepository, imageRepository: ImageRepository, containerRepository: ContainerRepository ) {
+
+  val logger = LoggerFactory.getLogger( classOf[HostController])
 
   @RequestMapping(value = Array("/host"), method = Array(RequestMethod.POST))
   def create(@RequestBody request: CreateHostRequest ) : Host = {
@@ -57,25 +65,60 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
       sshPassword = request.sshPassword
     )
 
-    hostRepository.save( updatedHost )
+    hostRepository.insert( updatedHost )
 
     updatedHost
 
   }
 
+  def syncImage(image: Image) = {
+    logger.info( "Syncing image: " + image.toString )
+
+    val oldImage = imageRepository.findByImageId( image.imageId )
+
+    if( oldImage != null ) {
+      logger.info( "Old image: " + oldImage.toString )
+      val refreshedImage = Image( oldImage.id, image.imageId, image.parentId, image.repTags, image.created )
+      imageRepository.save( refreshedImage )
+    } else {
+      logger.info( "Inserting Image: " + image.toString )
+      val insertedImage = imageRepository.insert( image )
+      logger.info( "Inserted Image: " + insertedImage.toString )
+    }
+  }
+
+  def syncImages(images: util.List[Image]) = {
+
+    for( image <- images ) {
+      syncImage( image )
+    }
+
+  }
+
   @RequestMapping(value = Array("/host/{id}/image"), method = Array(RequestMethod.GET))
-  def readAllImages( @PathVariable("id") id: String ) : String = {
+  def readAllImages( @PathVariable("id") id: String ) : java.util.List[Image] = {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
 
-    return restTemplate.getForObject(s"http://${host.hostname}:${host.port}/images/json", classOf[String])
+    val images = ImageJsonToObjectFactory.parseImages( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/images/json", classOf[String]) )
+
+    syncImages( images )
+
+    return imageRepository.findAll()
   }
 
   @RequestMapping(value = Array("/host/{id}/container"), method = Array(RequestMethod.GET))
-  def readAllContainers( @PathVariable("id") id: String ) : String = {
+  def readAllContainers( @PathVariable("id") id: String ) : java.util.List[Container] = {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
-    return restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/json", classOf[String])
+
+    val containers = ContainerJsonToObjectFactory.parseContainers( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/json", classOf[String] ) )
+
+    for ( container <- containers ) {
+      containerRepository.save( container )
+    }
+
+    return containerRepository.findAll()
   }
 
 
