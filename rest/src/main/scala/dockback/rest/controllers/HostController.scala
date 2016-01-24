@@ -72,18 +72,18 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
   }
 
   def syncImage(image: Image) = {
-    logger.info( "Syncing image: " + image.toString )
+    logger.debug( "Syncing image: " + image.toString )
 
     val oldImage = imageRepository.findByImageId( image.imageId )
 
     if( oldImage != null ) {
-      logger.info( "Old image: " + oldImage.toString )
+      logger.debug( "Old image: " + oldImage.toString )
       val refreshedImage = Image( oldImage.id, image.imageId, image.parentId, image.repTags, image.created )
       imageRepository.save( refreshedImage )
     } else {
-      logger.info( "Inserting Image: " + image.toString )
+      logger.debug( "Inserting Image: " + image.toString )
       val insertedImage = imageRepository.insert( image )
-      logger.info( "Inserted Image: " + insertedImage.toString )
+      logger.debug( "Inserted Image: " + insertedImage.toString )
     }
   }
 
@@ -107,6 +107,27 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     return imageRepository.findAll()
   }
 
+  def syncContainer(container: Container) = {
+    logger.debug( "Syncing container: " + container.toString )
+
+    val oldContainer = containerRepository.findByContainerId( container.containerId )
+    if( oldContainer != null ) {
+      logger.debug("Old container: " + oldContainer.toString )
+      val refreshedContainer = Container(oldContainer.id, container.containerId, container.names, container.image, container.imageId, container.created, container.status )
+      containerRepository.save( refreshedContainer )
+    } else {
+      logger.debug( "Inserting container: " + container.toString )
+      val insertedContainer = containerRepository.insert( container )
+      logger.debug( "Inserted container: " + insertedContainer.toString )
+    }
+  }
+
+  def syncContainers(containers: util.List[Container]) = {
+    for( container <- containers ) {
+      syncContainer( container )
+    }
+  }
+
   @RequestMapping(value = Array("/host/{id}/container"), method = Array(RequestMethod.GET))
   def readAllContainers( @PathVariable("id") id: String ) : java.util.List[Container] = {
     val host = hostRepository.findOne( id )
@@ -114,9 +135,7 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
     val containers = ContainerJsonToObjectFactory.parseContainers( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/json", classOf[String] ) )
 
-    for ( container <- containers ) {
-      containerRepository.save( container )
-    }
+    syncContainers( containers )
 
     return containerRepository.findAll()
   }
