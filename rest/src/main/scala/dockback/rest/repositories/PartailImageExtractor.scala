@@ -1,11 +1,11 @@
 package dockback.rest.repositories
 
-import dockback.domain.Image
+import dockback.domain.DockbackImage
 import play.api.libs.json.JsValue
 
-trait ImageExtractor extends Extractor {
+trait PartailImageExtractor extends Extractor {
 
-  def extract(jsImage: JsValue): Image = {
+  def extract(jsImage: JsValue): DockbackImage = {
     val imageId = (jsImage \ "Id").as[String]
     val parentId = (jsImage \ "ParentId").as[String]
 
@@ -13,7 +13,7 @@ trait ImageExtractor extends Extractor {
 
     val createdTime = (jsImage \ "Created").as[Long]
 
-    Image(null, imageId, parentId, repoTags, createdTime)
+    DockbackImage(null, imageId, parentId, repoTags, createdTime)
   }
 
 }

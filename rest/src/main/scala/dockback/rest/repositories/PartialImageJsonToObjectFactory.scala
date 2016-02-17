@@ -2,13 +2,13 @@ package dockback.rest.repositories
 
 import java.util
 
-import dockback.domain.Image
+import dockback.domain.DockbackImage
 import play.api.libs.json.Reads._
 import play.api.libs.json._ // Combinator syntax
 
-object ImageJsonToObjectFactory extends ImageExtractor {
+object PartialImageJsonToObjectFactory extends PartailImageExtractor {
 
-  def parseImage( imageJson: String ) : Image = {
+  def parseImage( imageJson: String ) : DockbackImage = {
 
     val jsImage: JsValue = Json.parse(imageJson)
 
@@ -16,9 +16,9 @@ object ImageJsonToObjectFactory extends ImageExtractor {
 
   }
 
-  def parseImages(imagesJson: String ) : java.util.List[Image] = {
+  def parseImages(imagesJson: String ) : java.util.List[DockbackImage] = {
 
-    val images = new util.ArrayList[Image]()
+    val images = new util.ArrayList[DockbackImage]()
 
     val jsImages = Json.parse(imagesJson)
 

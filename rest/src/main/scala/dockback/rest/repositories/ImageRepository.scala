@@ -1,8 +1,8 @@
 package dockback.rest.repositories
 
-import dockback.domain.Image
+import dockback.domain.DockbackImage
 import org.springframework.data.mongodb.repository.MongoRepository
 
-trait ImageRepository extends MongoRepository[Image, String] {
-  def findByImageId( imageId: String ) : Image
+trait ImageRepository extends MongoRepository[DockbackImage, String] {
+  def findByImageId( imageId: String ) : DockbackImage
 }

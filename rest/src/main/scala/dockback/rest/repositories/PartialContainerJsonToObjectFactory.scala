@@ -2,13 +2,13 @@ package dockback.rest.repositories
 
 import java.util
 
-import dockback.domain.Container
+import dockback.domain.DockbackPartialContainer
 import play.api.libs.json.Reads._
 import play.api.libs.json._ // Combinator syntax
 
-object ContainerJsonToObjectFactory extends ContainerExtractor {
+object PartialContainerJsonToObjectFactory extends PartialContainerExtractor {
 
-  def parseContainer( containerJson: String ) : Container = {
+  def parseContainer( containerJson: String ) : DockbackPartialContainer = {
 
     val jsContainer: JsValue = Json.parse(containerJson)
 
@@ -16,9 +16,9 @@ object ContainerJsonToObjectFactory extends ContainerExtractor {
 
   }
 
-  def parseContainers(containersJson: String ) : java.util.List[Container] = {
+  def parseContainers(containersJson: String ) : java.util.List[DockbackPartialContainer] = {
 
-    val containers = new util.ArrayList[Container]()
+    val containers = new util.ArrayList[DockbackPartialContainer]()
 
     val jsContainers = Json.parse(containersJson)
 
