@@ -118,7 +118,7 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     val oldContainer = containerRepository.findByContainerId( container.containerId )
     if( oldContainer != null ) {
       logger.debug("Old container: " + oldContainer.toString )
-      val refreshedContainer = DockerPartialContainer(oldContainer.id, container.containerId, container.names, container.image, container.imageId, container.created, container.status )
+      val refreshedContainer = DockerPartialContainer(/*oldContainer.id,*/ container.containerId, container.names, container.image, container.imageId, container.created, container.status )
       containerRepository.save( refreshedContainer )
     } else {
       logger.debug( "Inserting container: " + container.toString )

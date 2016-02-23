@@ -13,8 +13,8 @@ trait PartialContainerExtractor {
     val imageId = (jsContainer \ "ImageID").as[String]
     val created = (jsContainer \ "Created").as[Long]
     val status = (jsContainer \ "Status").as[String]
-
-    DockerPartialContainer(null, containerId, names, image, imageId, created, status)
+//todo
+    DockerPartialContainer(/*null,*/ containerId, names, image, imageId, created, status)
 
   }
 
