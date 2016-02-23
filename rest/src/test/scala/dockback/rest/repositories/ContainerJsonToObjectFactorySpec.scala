@@ -1,6 +1,6 @@
 package dockback.rest.repositories
 
-import dockback.domain.{DockbackPartialContainer, DockbackImage}
+import dockback.domain.{DockerPartialContainer, DockbackImage}
 import dockback.rest.BaseSpec
 
 class ContainerJsonToObjectFactorySpec extends BaseSpec {
@@ -20,7 +20,7 @@ class ContainerJsonToObjectFactorySpec extends BaseSpec {
 
       Then("the container should be an container object")
 
-      assert(container.isInstanceOf[DockbackPartialContainer])
+      assert(container.isInstanceOf[DockerPartialContainer])
 
       And( "the ID should be null")
       assert(null == container.id)
@@ -38,7 +38,7 @@ class ContainerJsonToObjectFactorySpec extends BaseSpec {
       val containers = PartialContainerJsonToObjectFactory.parseContainers( containersJson )
 
       Then( "the result should be a list of image objects" )
-      assert(containers.isInstanceOf[java.util.List[DockbackPartialContainer]])
+      assert(containers.isInstanceOf[java.util.List[DockerPartialContainer]])
 
       And("there should be 5 images")
       assert( containers.size() == 3)

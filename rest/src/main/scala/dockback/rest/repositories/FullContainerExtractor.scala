@@ -1,11 +1,11 @@
 package dockback.rest.repositories
 
-import dockback.domain.DockbackPartialContainer
+import dockback.domain.DockerPartialContainer
 import play.api.libs.json.JsValue
 
 trait FullContainerExtractor {
 
-  def extract(jsContainer: JsValue): DockbackPartialContainer = {
+  def extract(jsContainer: JsValue): DockerPartialContainer = {
 
     val containerId = (jsContainer \ "Id").as[String]
     val names = (jsContainer \ "Names").as[Array[String]]
@@ -14,7 +14,7 @@ trait FullContainerExtractor {
     val created = (jsContainer \ "Created").as[Long]
     val status = (jsContainer \ "Status").as[String]
 
-    DockbackPartialContainer(null, containerId, names, image, imageId, created, status)
+    DockerPartialContainer(null, containerId, names, image, imageId, created, status)
 
   }
 

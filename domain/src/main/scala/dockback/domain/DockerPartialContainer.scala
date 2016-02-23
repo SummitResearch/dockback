@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import scala.annotation.meta.field
 
 @Document
-case class DockbackFullContainer(
+case class DockerPartialContainer(
                        id: String = null,
                        @(Indexed@field)(unique = true) containerId: String,
                        names: Array[String],

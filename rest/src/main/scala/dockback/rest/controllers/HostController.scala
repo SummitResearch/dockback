@@ -3,7 +3,7 @@ package dockback.rest.controllers
 import java.util
 
 import com.mongodb.casbah.commons.Logger
-import dockback.domain.{DockbackPartialContainer, DockbackImage, Host}
+import dockback.domain.{DockerPartialContainer, DockbackImage, Host}
 import dockback.dto.{CreateHostRequest, UpdateHostRequest}
 import dockback.rest.repositories._
 import org.slf4j.LoggerFactory
@@ -112,13 +112,13 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     return imageRepository.findOne( imageId )
   }
 
-  def syncContainer(container: DockbackPartialContainer) = {
+  def syncContainer(container: DockerPartialContainer) = {
     logger.debug( "Syncing container: " + container.toString )
 
     val oldContainer = containerRepository.findByContainerId( container.containerId )
     if( oldContainer != null ) {
       logger.debug("Old container: " + oldContainer.toString )
-      val refreshedContainer = DockbackPartialContainer(oldContainer.id, container.containerId, container.names, container.image, container.imageId, container.created, container.status )
+      val refreshedContainer = DockerPartialContainer(oldContainer.id, container.containerId, container.names, container.image, container.imageId, container.created, container.status )
       containerRepository.save( refreshedContainer )
     } else {
       logger.debug( "Inserting container: " + container.toString )
@@ -127,14 +127,14 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     }
   }
 
-  def syncContainers(containers: util.List[DockbackPartialContainer]) = {
+  def syncContainers(containers: util.List[DockerPartialContainer]) = {
     for( container <- containers ) {
       syncContainer( container )
     }
   }
 
   @RequestMapping(value = Array("/host/{id}/container"), method = Array(RequestMethod.GET))
-  def readAllContainers( @PathVariable("id") id: String ) : java.util.List[DockbackPartialContainer] = {
+  def readAllContainers( @PathVariable("id") id: String ) : java.util.List[DockerPartialContainer] = {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
 
@@ -146,7 +146,7 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
   }
 
   @RequestMapping(value = Array("/host/{hostId}/container/{containerId}"))
-  def readContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : DockbackPartialContainer = {
+  def readContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : DockerPartialContainer = {
     val host = hostRepository.findOne( hostId )
     val containerFromMongo = containerRepository.findOne( containerId )
     val restTemplate = new RestTemplate()
