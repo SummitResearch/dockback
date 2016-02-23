@@ -9,11 +9,12 @@ import scala.annotation.meta.field
 case class DockbackContainer(
   id: String = null,
   imageId: String,
-  policies: List[Policy],
   @(Indexed@field)(unique = true) dockerContainerId: String,
   dockerFullContainer: DockerFullContainer,
   dockerPartialContainer: DockerPartialContainer,
   containerType: ContainerType,
-  currentHostId: String
+  currentHostId: String,
+  policies: List[Policy],
+  checkpoints: List[Checkpoint]
 )
 

@@ -7,8 +7,9 @@ import scala.annotation.meta.field
 
 @Document
 case class DockbackImage(
-                  id: String = null,
-                  @(Indexed@field)(unique = true) imageId: String,
-                  parentId: String,
-                  repTags: Array[String],
-                  created: Long )
+  id: String = null,
+  @(Indexed@field)(unique = true) imageId: String,
+  parentId: String,
+  repTags: Array[String],
+  created: Long
+)

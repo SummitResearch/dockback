@@ -1,3 +1,6 @@
 package dockback.domain
 
-case class DockerGraphDriver()
+case class DockerGraphDriver(
+  name: String,
+  data: String
+)
