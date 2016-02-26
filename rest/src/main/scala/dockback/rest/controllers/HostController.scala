@@ -29,7 +29,8 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
       hostname = request.hostname,
       port = request.port,
       sshUser = request.sshUser,
-      sshPassword = request.sshPassword
+      sshPassword = request.sshPassword,
+      dockerInfo = null
     )
 
     hostRepository.insert( newHost )
@@ -63,7 +64,8 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
       hostname = request.hostname,
       port = request.port,
       sshUser = request.sshUser,
-      sshPassword = request.sshPassword
+      sshPassword = request.sshPassword,
+      dockerInfo = null
     )
 
     hostRepository.insert( updatedHost )
@@ -75,11 +77,11 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
   def syncImage(image: DockbackImage) = {
     logger.debug( "Syncing image: " + image.toString )
 
-    val oldImage = imageRepository.findByImageId( image.imageId )
+    val oldImage = imageRepository.findByImageId( image.dockerImageId )
 
     if( oldImage != null ) {
       logger.debug( "Old image: " + oldImage.toString )
-      val refreshedImage = DockbackImage( oldImage.id, image.imageId, image.parentId, image.repTags, image.created )
+      val refreshedImage = DockbackImage( oldImage.id, image.dockerImageId, null, null, null, image.repTags, image.created, null, null )
       imageRepository.save( refreshedImage )
     } else {
       logger.debug( "Inserting Image: " + image.toString )

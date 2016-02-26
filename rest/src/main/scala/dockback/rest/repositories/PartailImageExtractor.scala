@@ -13,7 +13,7 @@ trait PartailImageExtractor extends Extractor {
 
     val createdTime = (jsImage \ "Created").as[Long]
 
-    DockbackImage(null, imageId, parentId, repoTags, createdTime)
+    DockbackImage(null, imageId, null, null, null, repoTags, createdTime, null, null)
   }
 
 }
