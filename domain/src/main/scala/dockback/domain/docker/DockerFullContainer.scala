@@ -23,4 +23,5 @@ case class DockerFullContainer(
   graphDriver: DockerGraphDriver,
   mounts: Array[String],
   config: DockerConfig,
-  networkSettings: DockerNetworkSettings )
+  networkSettings: DockerNetworkSettings
+)

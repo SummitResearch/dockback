@@ -9,7 +9,7 @@ import scala.annotation.meta.field
 @Document
 case class DockbackContainer(
   id: String = null,
-  imageId: String,
+  dockerImageId: String,
   @(Indexed@field)(unique = true) dockerContainerId: String,
   dockerFullContainer: DockerFullContainer,
   dockerPartialContainer: DockerPartialContainer,

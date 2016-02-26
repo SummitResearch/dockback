@@ -12,5 +12,6 @@ case class Host(
    hostname: String,
    port: Int,
    sshUser: String,
-   sshPassword: String
+   sshPassword: String,
+   dockerInfo: DockerInfo
 )
