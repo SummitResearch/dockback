@@ -1,4 +1,6 @@
-package dockback.domain
+package dockback.domain.docker
+
+import dockback.domain.NetworkMode
 
 case class DockerHostConfig(
   binds: Array[String],

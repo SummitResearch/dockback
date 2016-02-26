@@ -1,6 +1,7 @@
 package dockback.rest.repositories
 
-import dockback.domain.{DockerPartialContainer, DockbackImage}
+import dockback.domain.DockbackImage
+import dockback.domain.docker.DockerPartialContainer
 import dockback.rest.BaseSpec
 
 class ContainerJsonToObjectFactorySpec extends BaseSpec {

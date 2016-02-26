@@ -3,7 +3,8 @@ package dockback.rest.controllers
 import java.util
 
 import com.mongodb.casbah.commons.Logger
-import dockback.domain.{DockerPartialContainer, DockbackImage, Host}
+import dockback.domain.docker.DockerPartialContainer
+import dockback.domain.{DockbackImage, Host}
 import dockback.dto.{CreateHostRequest, UpdateHostRequest}
 import dockback.rest.repositories._
 import org.slf4j.LoggerFactory

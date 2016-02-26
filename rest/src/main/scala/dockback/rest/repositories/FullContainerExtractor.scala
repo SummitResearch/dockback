@@ -1,6 +1,6 @@
 package dockback.rest.repositories
 
-import dockback.domain.DockerPartialContainer
+import dockback.domain.docker.DockerPartialContainer
 import play.api.libs.json.JsValue
 
 trait FullContainerExtractor {

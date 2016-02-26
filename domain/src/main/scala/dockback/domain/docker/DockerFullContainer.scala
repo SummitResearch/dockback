@@ -1,4 +1,4 @@
-package dockback.domain
+package dockback.domain.docker
 
 case class DockerFullContainer(
   containerId: String,

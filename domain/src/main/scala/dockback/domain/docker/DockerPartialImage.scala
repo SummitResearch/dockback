@@ -1,3 +1,3 @@
-package dockback.domain
+package dockback.domain.docker
 
 case class DockerPartialImage( )

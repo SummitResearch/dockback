@@ -1,4 +1,6 @@
-package dockback.domain
+package dockback.domain.docker
+
+import dockback.domain.ContainerState
 
 case class DockerContainerState(
   status: ContainerState,

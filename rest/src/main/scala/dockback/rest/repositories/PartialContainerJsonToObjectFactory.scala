@@ -1,8 +1,7 @@
 package dockback.rest.repositories
 
 import java.util
-
-import dockback.domain.DockerPartialContainer
+import dockback.domain.docker.DockerPartialContainer
 import play.api.libs.json.Reads._
 import play.api.libs.json._ // Combinator syntax
 

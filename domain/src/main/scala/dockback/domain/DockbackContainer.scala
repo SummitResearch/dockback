@@ -1,5 +1,6 @@
 package dockback.domain
 
+import dockback.domain.docker.{DockerPartialContainer, DockerFullContainer}
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 

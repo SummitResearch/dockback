@@ -1,4 +1,6 @@
-package dockback.domain
+package dockback.domain.docker
+
+import dockback.domain.DockerSignal
 
 case class DockerConfig(
   hostname: String,
