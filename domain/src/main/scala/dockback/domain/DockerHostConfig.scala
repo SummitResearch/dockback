@@ -23,5 +23,22 @@ case class DockerHostConfig(
   dns: Array[String],
   dnsOptions: Array[String],
   dnsSearch: Array[String],
-  extraHosts: Array[String]
+  extraHosts: Array[String],
+  volumesFrom: String,
+  devices: Array[String],
+  networkMode: NetworkMode,
+  ipcMode: String,
+  pidMode: String,
+  utsMode: String,
+  capAdd: String,
+  capDrop: String,
+  groupAdd: String,
+  restartPolicy: DockerRestartPolicy,
+  securityOpt: String,
+  readOnlyRootFs: Boolean,
+  ulimits: String,
+  logConfig: DockerLogConfig,
+  cgroupParent: String,
+  consoleSize: Array[Int],
+  volumeDriver: String
 )
