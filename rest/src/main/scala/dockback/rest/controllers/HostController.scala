@@ -2,6 +2,7 @@ package dockback.rest.controllers
 
 import java.util
 
+import dockback.domain.docker.DockerInfo
 import dockback.domain.{DockbackContainer, DockbackImage, Host}
 import dockback.dto.{CreateHostRequest, UpdateHostRequest}
 import dockback.rest.repositories._
@@ -28,13 +29,18 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
       port = request.port,
       sshUser = request.sshUser,
       sshPassword = request.sshPassword,
-      dockerInfo = null
+      dockerInfo = gatherDockerInfo( request )
     )
 
     hostRepository.insert( newHost )
 
     newHost
 
+  }
+
+  private def gatherDockerInfo( request: CreateHostRequest ): DockerInfo = {
+    val restTemplate = new RestTemplate()
+    DockerInfoJsonToObjectFactory.parseInfo( restTemplate.getForObject(s"http://${request.hostname}:${request.port}/info", classOf[String] ) )
   }
 
   @RequestMapping(value = Array("/host"), method = Array(RequestMethod.GET))

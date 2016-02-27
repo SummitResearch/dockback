@@ -1,5 +1,5 @@
 package dockback.domain.docker
 
-class DockerDriverStatus(
+case class DockerDriverStatus(
     statuses: Map[String, String]
 )

@@ -1,8 +1,6 @@
 package dockback.domain.docker
 
-import com.fasterxml.jackson.databind.node.BooleanNode
-
-class DockerInfo(
+case class DockerInfo(
   id: String,
   containers: Int,
   images: Int,

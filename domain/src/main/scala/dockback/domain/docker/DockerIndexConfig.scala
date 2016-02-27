@@ -1,6 +1,6 @@
 package dockback.domain.docker
 
-class DockerIndexConfig(
+case class DockerIndexConfig(
   name: String,
   mirrors: Array[String],
   secure: Boolean,
