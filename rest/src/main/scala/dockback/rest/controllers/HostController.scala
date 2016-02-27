@@ -2,9 +2,7 @@ package dockback.rest.controllers
 
 import java.util
 
-import com.mongodb.casbah.commons.Logger
-import dockback.domain.docker.DockerPartialContainer
-import dockback.domain.{DockbackImage, Host}
+import dockback.domain.{DockbackContainer, DockbackImage, Host}
 import dockback.dto.{CreateHostRequest, UpdateHostRequest}
 import dockback.rest.repositories._
 import org.slf4j.LoggerFactory
@@ -77,7 +75,7 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
   def syncImage(image: DockbackImage) = {
     logger.debug( "Syncing image: " + image.toString )
 
-    val oldImage = imageRepository.findByImageId( image.dockerImageId )
+    val oldImage = imageRepository.findByDockerImageId( image.dockerImageId )
 
     if( oldImage != null ) {
       logger.debug( "Old image: " + oldImage.toString )
@@ -115,13 +113,23 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     return imageRepository.findOne( imageId )
   }
 
-  def syncContainer(container: DockerPartialContainer) = {
+  def syncContainer(container: DockbackContainer) = {
     logger.debug( "Syncing container: " + container.toString )
 
-    val oldContainer = containerRepository.findByContainerId( container.containerId )
+    val oldContainer = containerRepository.findByDockerContainerId( container.dockerContainerId )
     if( oldContainer != null ) {
       logger.debug("Old container: " + oldContainer.toString )
-      val refreshedContainer = DockerPartialContainer(/*oldContainer.id,*/ container.containerId, container.names, container.image, container.imageId, container.created, container.status )
+      val refreshedContainer = DockbackContainer(
+        oldContainer.id,
+        container.dockerImageId,
+        container.dockerContainerId,
+        container.dockerFullContainer,
+        container.dockerPartialContainer,
+        container.containerType,
+        container.currentHostId,
+        container.policies,
+        container.checkpoints )
+
       containerRepository.save( refreshedContainer )
     } else {
       logger.debug( "Inserting container: " + container.toString )
@@ -130,14 +138,14 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     }
   }
 
-  def syncContainers(containers: util.List[DockerPartialContainer]) = {
+  def syncContainers(containers: util.List[DockbackContainer]) = {
     for( container <- containers ) {
       syncContainer( container )
     }
   }
 
   @RequestMapping(value = Array("/host/{id}/container"), method = Array(RequestMethod.GET))
-  def readAllContainers( @PathVariable("id") id: String ) : java.util.List[DockerPartialContainer] = {
+  def readAllContainers( @PathVariable("id") id: String ) : java.util.List[DockbackContainer] = {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
 
@@ -149,12 +157,12 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
   }
 
   @RequestMapping(value = Array("/host/{hostId}/container/{containerId}"))
-  def readContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : DockerPartialContainer = {
+  def readContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : DockbackContainer = {
     val host = hostRepository.findOne( hostId )
     val containerFromMongo = containerRepository.findOne( containerId )
     val restTemplate = new RestTemplate()
 
-    val container = PartialContainerJsonToObjectFactory.parseContainer( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/${containerFromMongo.containerId}/json", classOf[String] ) )
+    val container = PartialContainerJsonToObjectFactory.parseContainer( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/${containerFromMongo.dockerContainerId}/json", classOf[String] ) )
     syncContainer( container )
     return containerRepository.findOne( containerId )
   }

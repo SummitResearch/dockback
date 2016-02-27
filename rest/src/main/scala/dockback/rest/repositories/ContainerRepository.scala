@@ -1,8 +1,8 @@
 package dockback.rest.repositories
 
-import dockback.domain.docker.DockerPartialContainer
+import dockback.domain.DockbackContainer
 import org.springframework.data.mongodb.repository.MongoRepository
 
-trait ContainerRepository extends MongoRepository[DockerPartialContainer, String] {
-  def findByContainerId( containerId: String ) : DockerPartialContainer
+trait ContainerRepository extends MongoRepository[DockbackContainer, String] {
+  def findByDockerContainerId( dockerContainerId: String ) : DockbackContainer
 }
