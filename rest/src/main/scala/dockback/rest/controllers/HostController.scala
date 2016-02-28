@@ -35,7 +35,6 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     val dockerInfo = gatherDockerInfo( request.hostname, request.port )
 
     val hostWithInfo = Host( newHost.id, newHost.hostname, newHost.port, newHost.sshUser, newHost.sshPassword, dockerInfo)
-    logger.info(hostWithInfo.toString)
     hostRepository.insert( hostWithInfo )
 
     hostWithInfo
@@ -49,11 +48,21 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
   @RequestMapping(value = Array("/host"), method = Array(RequestMethod.GET))
   def readAll() : java.util.List[Host] = {
+    val foundHosts = hostRepository.findAll()
+    for ( oldHost <- foundHosts ) {
+      val dockerInfo = gatherDockerInfo( oldHost.hostname, oldHost.port )
+      val hostWithInfo = Host( oldHost.id, oldHost.hostname, oldHost.port, oldHost.sshUser, oldHost.sshPassword, dockerInfo)
+      hostRepository.save( hostWithInfo )
+    }
     hostRepository.findAll()
   }
 
   @RequestMapping(value = Array("/host/{id}"), method = Array(RequestMethod.GET))
   def read( @PathVariable("id") id: String ) : Host = {
+    val oldHost = hostRepository.findOne( id )
+    val dockerInfo = gatherDockerInfo( oldHost.hostname, oldHost.port )
+    val hostWithInfo = Host( oldHost.id, oldHost.hostname, oldHost.port, oldHost.sshUser, oldHost.sshPassword, dockerInfo)
+    hostRepository.save( hostWithInfo )
     hostRepository.findOne( id )
   }
 
@@ -76,7 +85,7 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
       dockerInfo = null
     )
 
-    hostRepository.insert( updatedHost )
+    hostRepository.save( updatedHost )
 
     updatedHost
 
