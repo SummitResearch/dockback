@@ -1,7 +1,5 @@
 package dockback.rest.repositories
 
-import java.util
-
 import dockback.domain.docker.DockerInfo
 import play.api.libs.json._ // Combinator syntax
 

@@ -12,11 +12,11 @@ object DockerInfoExtractor {
     (JsPath \ "Containers").read[Int] and
     (JsPath \ "Images").read[Int] and
     (JsPath \ "Driver").read[String] and
-    (JsPath \ "DriverStatus").read[JsArray].map { arr =>
-      val items = arr(0).asOpt[JsArray]
-      val m = items.map(el => Map(el(0).asOpt[String].getOrElse("") -> el(1).asOpt[String].getOrElse("")))
-      m.map(_.filterKeys(_.nonEmpty)).getOrElse(Map.empty)
-    }.orElse(Reads.pure(Map.empty[String, String])) and
+//    (JsPath \ "DriverStatus").read[JsArray].map { arr =>
+//      val items = arr(0).asOpt[JsArray]
+//      val m = items.map(el => Map(el(0).asOpt[String].getOrElse("") -> el(1).asOpt[String].getOrElse("")))
+//      m.map(_.filterKeys(_.nonEmpty)).getOrElse(Map.empty)
+//    }.orElse(Reads.pure(Map.empty[String, String])) and
     (JsPath \ "MemoryLimit").read[Boolean] and
     (JsPath \ "SwapLimit").read[Boolean] and
     (JsPath \ "CpuCfsPeriod").read[Boolean] and
@@ -28,7 +28,8 @@ object DockerInfoExtractor {
     (JsPath \ "NFd").read[Int] and
     (JsPath \ "OomKillDisable").read[Boolean] and
     (JsPath \ "NGoroutines").read[Int] and
-    (JsPath \ "SystemTime").read[String]) (DockerInfoPart1.apply _)
+    (JsPath \ "SystemTime").read[String]
+    ) (DockerInfoPart1.apply _)
 
   implicit val dockerInfoPart2Reads: Reads[DockerInfoPart2] = (
     (JsPath \ "ExecutionDriver").read[String] and
@@ -58,11 +59,11 @@ object DockerInfoExtractor {
     val part2 = jsInfo.as[DockerInfoPart2]
 
     DockerInfo(
-      part1.id,
+      part1.instanceId,
       part1.containers,
       part1.images,
       part1.driver,
-      part1.driverStatus,
+//      part1.driverStatus,
       part1.memoryLimit,
       part1.swapLimit,
       part1.cpuCfsPeriod,
@@ -102,11 +103,11 @@ object DockerInfoExtractor {
 }
 
 case class DockerInfoPart1(
-  id: String,
+  instanceId: String,
   containers: Int,
   images: Int,
   driver: String,
-  driverStatus: Map[String, String],
+//  driverStatus: Map[String, String],
   memoryLimit: Boolean,
   swapLimit: Boolean,
   cpuCfsPeriod: Boolean,

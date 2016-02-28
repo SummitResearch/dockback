@@ -19,7 +19,7 @@ class DockerInfoExtractorSpec extends BaseSpec {
 
       val dockerInfo = DockerInfoExtractor.extract( jsInfo )
 
-      assert(dockerInfo.id.equals("4UWB:KGTH:NRXG:6VBX:KXBE:7KFV:LTNO:SP4P:I33O:PXNG:5ESR:IQBG"))
+      assert(dockerInfo.instanceId.equals("4UWB:KGTH:NRXG:6VBX:KXBE:7KFV:LTNO:SP4P:I33O:PXNG:5ESR:IQBG"))
     }
   }
 

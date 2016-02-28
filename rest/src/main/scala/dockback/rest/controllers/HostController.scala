@@ -29,12 +29,16 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
       port = request.port,
       sshUser = request.sshUser,
       sshPassword = request.sshPassword,
-      dockerInfo = gatherDockerInfo( request )
+      dockerInfo = null //gatherDockerInfo( request )
     )
 
-    hostRepository.insert( newHost )
+    val dockerInfo = gatherDockerInfo( request )
 
-    newHost
+    val hostWithInfo = Host( newHost.id, newHost.hostname, newHost.port, newHost.sshUser, newHost.sshPassword, dockerInfo)
+    logger.info(hostWithInfo.toString)
+    hostRepository.insert( hostWithInfo )
+
+    hostWithInfo
 
   }
 

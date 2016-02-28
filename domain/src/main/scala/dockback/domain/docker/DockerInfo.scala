@@ -1,11 +1,11 @@
 package dockback.domain.docker
 
 case class DockerInfo(
-  id: String,
+  instanceId: String,
   containers: Int,
   images: Int,
   driver: String,
-  driverStatus: Map[String, String],
+//  driverStatus: Map[String, String],
   memoryLimit: Boolean,
   swapLimit: Boolean,
   cpuCfsPeriod: Boolean,
