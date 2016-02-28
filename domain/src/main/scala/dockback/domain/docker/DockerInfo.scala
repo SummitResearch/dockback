@@ -1,13 +1,11 @@
 package dockback.domain.docker
 
-import com.fasterxml.jackson.databind.node.BooleanNode
-
-class DockerInfo(
-  id: String,
+case class DockerInfo(
+  instanceId: String,
   containers: Int,
   images: Int,
   driver: String,
-  driverStatus: DockerDriverStatus,
+//  driverStatus: Map[String, String],
   memoryLimit: Boolean,
   swapLimit: Boolean,
   cpuCfsPeriod: Boolean,
@@ -26,7 +24,7 @@ class DockerInfo(
   kernelVersion: String,
   operatingSystem: String,
   indexServerAddress: String,
-  registryConfig: DockerRegistryConfig,
+//  registryConfig: DockerRegistryConfig,
   initSha1: String,
   initPath: String,
   ncpu: Int,
@@ -36,7 +34,7 @@ class DockerInfo(
   httpsProxy: String,
   noProxy: String,
   name: String,
-  labels:  Map[String, String],
+  labels:  Array[String],
   experimentalBuild: Boolean,
   serverVersion: String,
   clusterStore: String,

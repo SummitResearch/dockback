@@ -1,6 +1,6 @@
 package dockback.domain.docker
 
-class DockerRegistryConfig(
+case class DockerRegistryConfig(
   insecureRegistryCidrs: Array[String],
   indexConfigs: Map[String, DockerIndexConfig]
 )
