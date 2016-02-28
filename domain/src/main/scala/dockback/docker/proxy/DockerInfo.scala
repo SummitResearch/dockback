@@ -1,4 +1,4 @@
-package dockback.metaInfo
+package dockback.docker.proxy
 
 import fr.janalyse.ssh.SSH
 import com.mongodb.casbah.Imports._
@@ -13,6 +13,7 @@ case class ContainerInfo(host: String) {
   
   def getInfo(host: String) {
     //jassh.SSH.once(host, "dockback", "changeme")
+//    SSH.shell("192.168.39.132", "dockback", "changeme") { sh => 
     SSH.shell("192.168.39.132", "dockback", "changeme") { sh => 
       //lsResult = sh.execute("ls")
       result = sh.execute("echo changeme | sudo -S docker info")
