@@ -34,7 +34,7 @@ case class DockerInfo(
   httpsProxy: String,
   noProxy: String,
   name: String,
-  labels:  Map[String, String],
+  labels:  Array[String],
   experimentalBuild: Boolean,
   serverVersion: String,
   clusterStore: String,

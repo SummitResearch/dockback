@@ -47,7 +47,7 @@ object DockerInfoExtractor {
     (JsPath \ "HttpsProxy").read[String] and
     (JsPath \ "NoProxy").read[String] and
     (JsPath \ "Name").read[String] and
-    (JsPath \ "Labels").read[Map[String, String]] and
+    (JsPath \ "Labels").read[Array[String]].orElse(Reads.pure(Array.empty[String])) and
     (JsPath \ "ExperimentalBuild").read[Boolean] and
     (JsPath \ "ServerVersion").read[String] and
     (JsPath \ "ClusterStore").read[String] and
@@ -138,7 +138,7 @@ case class DockerInfoPart2(
   httpsProxy: String,
   noProxy: String,
   name: String,
-  labels:  Map[String, String],
+  labels:  Array[String],
   experimentalBuild: Boolean,
   serverVersion: String,
   clusterStore: String,
