@@ -32,7 +32,7 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
       dockerInfo = null //gatherDockerInfo( request )
     )
 
-    val dockerInfo = gatherDockerInfo( request )
+    val dockerInfo = gatherDockerInfo( request.hostname, request.port )
 
     val hostWithInfo = Host( newHost.id, newHost.hostname, newHost.port, newHost.sshUser, newHost.sshPassword, dockerInfo)
     logger.info(hostWithInfo.toString)
@@ -42,9 +42,9 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
   }
 
-  private def gatherDockerInfo( request: CreateHostRequest ): DockerInfo = {
+  private def gatherDockerInfo( hostname: String, port: Int ): DockerInfo = {
     val restTemplate = new RestTemplate()
-    DockerInfoJsonToObjectFactory.parseInfo( restTemplate.getForObject(s"http://${request.hostname}:${request.port}/info", classOf[String] ) )
+    DockerInfoJsonToObjectFactory.parseInfo( restTemplate.getForObject(s"http://${hostname}:${port}/info", classOf[String] ) )
   }
 
   @RequestMapping(value = Array("/host"), method = Array(RequestMethod.GET))
