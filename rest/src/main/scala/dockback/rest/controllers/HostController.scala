@@ -2,8 +2,8 @@ package dockback.rest.controllers
 
 import java.util
 
-import dockback.domain.docker.DockerInfo
-import dockback.domain.{DockbackContainer, DockbackImage, Host}
+import dockback.domain.docker.{DockerPartialImage, DockerInfo}
+import dockback.domain._
 import dockback.dto.{CreateHostRequest, UpdateHostRequest}
 import dockback.rest.repositories._
 import org.slf4j.LoggerFactory
@@ -66,6 +66,16 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     hostRepository.findOne( id )
   }
 
+  @RequestMapping(value = Array("/host/{id}/info"), method = Array(RequestMethod.GET))
+  def readHostInfoOnly( @PathVariable("id") id: String ) : DockerInfo = {
+    val oldHost = hostRepository.findOne( id )
+    val dockerInfo = gatherDockerInfo( oldHost.hostname, oldHost.port )
+    val hostWithInfo = Host( oldHost.id, oldHost.hostname, oldHost.port, oldHost.sshUser, oldHost.sshPassword, dockerInfo)
+    hostRepository.save( hostWithInfo )
+    hostRepository.findOne( id )
+    gatherDockerInfo( oldHost.hostname, oldHost.port )
+  }
+
   @RequestMapping(value = Array("/host/{id}"), method = Array(RequestMethod.DELETE))
   def delete( @PathVariable("id") id: String ) = {
     hostRepository.delete( id )
@@ -82,7 +92,7 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
       port = request.port,
       sshUser = request.sshUser,
       sshPassword = request.sshPassword,
-      dockerInfo = null
+      dockerInfo = gatherDockerInfo( request.hostname, request.port )
     )
 
     hostRepository.save( updatedHost )
@@ -91,44 +101,69 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
   }
 
-  def syncImage(image: DockbackImage) = {
-    logger.debug( "Syncing image: " + image.toString )
+  def syncPartialImage( image: Image ) = {
+    logger.info( "Syncing image: " + image.toString )
 
     val oldImage = imageRepository.findByDockerImageId( image.dockerImageId )
 
+    logger.info("Old Image: " + oldImage )
+
     if( oldImage != null ) {
-      logger.debug( "Old image: " + oldImage.toString )
-      val refreshedImage = DockbackImage( oldImage.id, image.dockerImageId, null, null, null, image.repTags, image.created, null, null )
+
+      logger.info( "Old image: " + oldImage.toString )
+
+      val refreshedImage = Image( oldImage.id, image.dockerImageId, image.parentId, image.repoTags, image.created,
+        image.createdString, image.size, image.virtualSize, image.architecture, image.os, image.dockerVersion,
+        image.cmd/*, oldImage.policies, oldImage.checkpoints*/ )
+
       imageRepository.save( refreshedImage )
+
     } else {
-      logger.debug( "Inserting Image: " + image.toString )
-      val insertedImage = imageRepository.insert( image )
-      logger.debug( "Inserted Image: " + insertedImage.toString )
+
+      logger.info( "Inserting Image: " + image.toString )
+
+      val insertedImage = imageRepository.insert( Image( null,image.dockerImageId, image.parentId, image.repoTags,
+        image.created, image.createdString, image.size, image.virtualSize, image.architecture, image.os,
+        image.dockerVersion, image.cmd/*, List[Policy](), List[Checkpoint]( )*/ ) )
+
+      logger.info( "Inserted Image: " + insertedImage.toString )
+
     }
   }
 
-  def syncImages(images: util.List[DockbackImage]) = {
+  def syncPartialImages(images: util.List[Image], host: Host) = {
+
+    val restTemplate = new RestTemplate()
 
     for( image <- images ) {
-      syncImage( image )
+      val fullImage = ImageJsonToObjectFactory.parseFullImage(
+        restTemplate.getForObject(s"http://${host.hostname}:${host.port}/images/${image.dockerImageId}/json",
+          classOf[String]) )
+      logger.info( fullImage.toString )
+      syncPartialImage( image.copy( createdString = fullImage.createdString, architecture = fullImage.architecture,
+        os = fullImage.os, dockerVersion = fullImage.dockerVersion, cmd = fullImage.cmd ) )
     }
 
   }
 
   @RequestMapping(value = Array("/host/{id}/image"), method = Array(RequestMethod.GET))
-  def readAllImages( @PathVariable("id") id: String ) : java.util.List[DockbackImage] = {
+  def readAllImages( @PathVariable("id") id: String ) : java.util.List[Image] = {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
 
-    val images = PartialImageJsonToObjectFactory.parseImages( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/images/json", classOf[String]) )
+    val partialImages = ImageJsonToObjectFactory.parsePartialImages( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/images/json", classOf[String]) )
 
-    syncImages( images )
+    syncPartialImages( partialImages, host )
 
     return imageRepository.findAll()
   }
 
   @RequestMapping(value = Array("/host/{hostId}/image/{imageId}"))
-  def readImage( @PathVariable("hostId") hostId: String, @PathVariable("imageId") imageId: String ) : DockbackImage = {
+  def readImage( @PathVariable("hostId") hostId: String, @PathVariable("imageId") imageId: String ) : Image = {
+    val host = hostRepository.findOne( hostId )
+    val restTemplate = new RestTemplate()
+    val partialImages = ImageJsonToObjectFactory.parsePartialImages( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/images/json", classOf[String]) )
+    syncPartialImages( partialImages, host )
     return imageRepository.findOne( imageId )
   }
 
