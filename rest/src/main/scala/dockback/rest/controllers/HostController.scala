@@ -167,22 +167,32 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     return imageRepository.findOne( imageId )
   }
 
-  def syncContainer(container: DockbackContainer) = {
+  def syncContainer(container: Container) = {
     logger.debug( "Syncing container: " + container.toString )
 
     val oldContainer = containerRepository.findByDockerContainerId( container.dockerContainerId )
     if( oldContainer != null ) {
       logger.debug("Old container: " + oldContainer.toString )
-      val refreshedContainer = DockbackContainer(
+      val refreshedContainer = Container(
         oldContainer.id,
         container.dockerImageId,
         container.dockerContainerId,
-        container.dockerFullContainer,
-        container.dockerPartialContainer,
-        container.containerType,
-        container.currentHostId,
-        container.policies,
-        container.checkpoints )
+        container.names,
+        container.image,
+        container.imageId,
+        container.created,
+        container.statusMessage,
+        container.networkMode,
+        container.ipAddress,
+        container.status,
+        container.pid,
+        container.startedAt,
+        container.finishedAt,
+        container.logPath,
+        container.currentHostId
+//        container.policies,
+//        container.checkpoints
+      )
 
       containerRepository.save( refreshedContainer )
     } else {
@@ -192,14 +202,14 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     }
   }
 
-  def syncContainers(containers: util.List[DockbackContainer]) = {
+  def syncContainers(containers: util.List[Container]) = {
     for( container <- containers ) {
       syncContainer( container )
     }
   }
 
   @RequestMapping(value = Array("/host/{id}/container"), method = Array(RequestMethod.GET))
-  def readAllContainers( @PathVariable("id") id: String ) : java.util.List[DockbackContainer] = {
+  def readAllContainers( @PathVariable("id") id: String ) : java.util.List[Container] = {
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
 
@@ -211,7 +221,7 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
   }
 
   @RequestMapping(value = Array("/host/{hostId}/container/{containerId}"))
-  def readContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : DockbackContainer = {
+  def readContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : Container = {
     val host = hostRepository.findOne( hostId )
     val containerFromMongo = containerRepository.findOne( containerId )
     val restTemplate = new RestTemplate()

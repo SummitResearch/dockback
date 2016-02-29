@@ -50,7 +50,7 @@ class ContainerJsonToObjectFactorySpec extends BaseSpec {
 //      assert(null == container.id)
 
       And( "the image ID should be '407195ab8b072ce8b237f664b8d032704e8047b8e64139cc2e017163f7161647'")
-      assert(container.dockerImageId.equals( "407195ab8b072ce8b237f664b8d032704e8047b8e64139cc2e017163f7161647" ))
+      assert(container.imageId.equals( "407195ab8b072ce8b237f664b8d032704e8047b8e64139cc2e017163f7161647" ))
 
     }
 

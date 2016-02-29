@@ -2,8 +2,8 @@ package dockback.docker.proxy
 
 import fr.janalyse.ssh.SSH
 import com.mongodb.casbah.Imports._
-import dockback.domain.DockbackContainer
-import dockback.domain.DockbackContainer
+import dockback.domain.Container
+import dockback.domain.Container
 
 //case class Checkpoint(host: String, imageDir: String, leaveRunning: Boolean, workDir: String, containerId: Long) {
 case class Checkpoint(host: String) {
