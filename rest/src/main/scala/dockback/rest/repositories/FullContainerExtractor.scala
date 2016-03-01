@@ -1,20 +1,24 @@
 package dockback.rest.repositories
 
+import dockback.domain.Container
 import dockback.domain.docker.DockerPartialContainer
 import play.api.libs.json.JsValue
 
-trait FullContainerExtractor {
+object FullContainerExtractor {
 
-  def extract(jsContainer: JsValue): DockerPartialContainer = {
+  def extract(jsContainer: JsValue): Container = {
 
-    val containerId = (jsContainer \ "Id").as[String]
-    val names = (jsContainer \ "Names").as[Array[String]]
-    val image = (jsContainer \ "Image").as[String]
-    val imageId = (jsContainer \ "ImageID").as[String]
-    val created = (jsContainer \ "Created").as[Long]
-    val status = (jsContainer \ "Status").as[String]
+    val dockerContainerId = (jsContainer \ "Id").as[String]
+    val networkMode = (jsContainer \ "HostConfig" \ "NetworkMode").as[String]
+    val ipAddress = (jsContainer \ "NetworkSettings" \ "Networks" \ "bridge" \ "IPAddress").as[String]
+    val status = (jsContainer \ "State" \ "Status").as[String]
+    val startedAt = (jsContainer \ "State" \ "StartedAt").as[String]
+    val finishedAt = (jsContainer \ "State" \ "FinishedAt").as[String]
+    val logPath = (jsContainer \ "LogPath").as[String]
+    val pid = (jsContainer \ "State" \ "Pid").as[Long]
 //TO
-    DockerPartialContainer(/*null,*/ containerId, names, image, imageId, created, status)
+    Container( dockerContainerId = dockerContainerId, networkMode = networkMode, ipAddress = ipAddress, status = status,
+      startedAt = startedAt, finishedAt = finishedAt, logPath = logPath, pid = pid )
 
   }
 

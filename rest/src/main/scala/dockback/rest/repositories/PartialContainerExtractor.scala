@@ -3,7 +3,7 @@ package dockback.rest.repositories
 import dockback.domain.{ContainerType, Container}
 import play.api.libs.json.JsValue
 
-trait PartialContainerExtractor {
+object PartialContainerExtractor {
 
   def extract(jsContainer: JsValue): Container = {
 

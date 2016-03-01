@@ -155,7 +155,7 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
     syncPartialImages( partialImages, host )
 
-    return imageRepository.findAll()
+    imageRepository.findAll()
   }
 
   @RequestMapping(value = Array("/host/{hostId}/image/{imageId}"))
@@ -164,47 +164,64 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     val restTemplate = new RestTemplate()
     val partialImages = ImageJsonToObjectFactory.parsePartialImages( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/images/json", classOf[String]) )
     syncPartialImages( partialImages, host )
-    return imageRepository.findOne( imageId )
+    imageRepository.findOne( imageId )
+  }
+
+  @RequestMapping(value = Array("/host/{hostId}/image/{imageId}/full"))
+  def readFullImage( @PathVariable("hostId") hostId: String, @PathVariable("imageId") imageId: String ) : String = {
+    val host = hostRepository.findOne( hostId )
+    val imageFromMongo = imageRepository.findOne( imageId )
+    val restTemplate = new RestTemplate()
+    restTemplate.getForObject(s"http://${host.hostname}:${host.port}/images/${imageFromMongo.dockerImageId}/json", classOf[String])
   }
 
   def syncContainer(container: Container) = {
-    logger.debug( "Syncing container: " + container.toString )
+    logger.info( "Syncing container: " + container.toString )
 
     val oldContainer = containerRepository.findByDockerContainerId( container.dockerContainerId )
-    if( oldContainer != null ) {
-      logger.debug("Old container: " + oldContainer.toString )
-      val refreshedContainer = Container(
-        oldContainer.id,
-        container.dockerImageId,
-        container.dockerContainerId,
-        container.names,
-        container.image,
-        container.imageId,
-        container.created,
-        container.statusMessage,
-        container.networkMode,
-        container.ipAddress,
-        container.status,
-        container.pid,
-        container.startedAt,
-        container.finishedAt,
-        container.logPath,
-        container.currentHostId
-//        container.policies,
-//        container.checkpoints
-      )
 
-      containerRepository.save( refreshedContainer )
+    if( oldContainer != null ) {
+
+      logger.info("Old container: " + oldContainer.toString )
+
+      val refreshedContainer = container.copy( id = oldContainer.id, dockerContainerId = container.dockerContainerId,
+        names = container.names, image = container.image, imageId = container.imageId, created = container.created,
+        statusMessage = container.statusMessage, networkMode = container.networkMode, ipAddress = container.ipAddress,
+        status = container.status, pid = container.pid, startedAt = container.startedAt,
+        finishedAt = container.finishedAt, logPath = container.logPath, currentHostId = container.currentHostId )
+
+      val savedContainer = containerRepository.save( refreshedContainer )
+
+      logger.info( "Saved container: " + savedContainer.toString )
+
     } else {
-      logger.debug( "Inserting container: " + container.toString )
-      val insertedContainer = containerRepository.insert( container )
-      logger.debug( "Inserted container: " + insertedContainer.toString )
+
+      logger.info( "Inserting container: " + container.toString )
+
+      val insertedContainer = containerRepository.insert( Container( null,
+        dockerContainerId = container.dockerContainerId, names = container.names, image = container.image,
+        imageId = container.imageId, created = container.created, statusMessage = container.statusMessage,
+        networkMode = container.networkMode, ipAddress = container.ipAddress, status = container.status,
+        pid = container.pid, startedAt = container.startedAt, finishedAt = container.finishedAt,
+        logPath = container.logPath, currentHostId = container.currentHostId) )
+
+      logger.info( "Inserted container: " + insertedContainer.toString )
+
     }
   }
 
-  def syncContainers(containers: util.List[Container]) = {
+  def syncContainers(containers: util.List[Container], host: Host) = {
+
+    val restTemplate = new RestTemplate()
+
     for( container <- containers ) {
-      syncContainer( container )
+      val fullContainer = ContainerJsonToObjectFactory.parseFullContainer(
+        restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/${container.dockerContainerId}/json",
+          classOf[String]) )
+      logger.info( "Full Container: " + fullContainer.toString )
+      syncContainer( container.copy( networkMode = fullContainer.networkMode, ipAddress = fullContainer.ipAddress,
+        status = fullContainer.status, startedAt = fullContainer.startedAt, finishedAt = fullContainer.finishedAt,
+        logPath = fullContainer.logPath, pid = fullContainer.pid, currentHostId = host.id ) )
     }
   }
 
@@ -213,11 +230,10 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     val host = hostRepository.findOne( id )
     val restTemplate = new RestTemplate()
 
-    val containers = PartialContainerJsonToObjectFactory.parseContainers( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/json", classOf[String] ) )
+    val containers = ContainerJsonToObjectFactory.parseContainers( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/json", classOf[String] ) )
+    syncContainers( containers, host )
 
-    syncContainers( containers )
-
-    return containerRepository.findAll()
+    containerRepository.findAll()
   }
 
   @RequestMapping(value = Array("/host/{hostId}/container/{containerId}"))
@@ -226,9 +242,20 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     val containerFromMongo = containerRepository.findOne( containerId )
     val restTemplate = new RestTemplate()
 
-    val container = PartialContainerJsonToObjectFactory.parseContainer( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/${containerFromMongo.dockerContainerId}/json", classOf[String] ) )
-    syncContainer( container )
-    return containerRepository.findOne( containerId )
+    val containers = ContainerJsonToObjectFactory.parseContainers( restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/json", classOf[String] ) )
+    syncContainers( containers, host )
+
+    containerRepository.findOne( containerId )
+  }
+
+  @RequestMapping(value = Array("/host/{hostId}/container/{containerId}/full"))
+  def readFullContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : String = {
+    val host = hostRepository.findOne( hostId )
+    val containerFromMongo = containerRepository.findOne( containerId )
+    val restTemplate = new RestTemplate()
+
+    restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/${containerFromMongo.dockerContainerId}/json", classOf[String] )
+
   }
 
   @ResponseStatus(value = HttpStatus.CONFLICT, reason = "duplicate field")

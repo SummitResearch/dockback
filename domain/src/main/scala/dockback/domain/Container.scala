@@ -9,7 +9,6 @@ import scala.annotation.meta.field
 @Document
 case class Container(
   id: String = null,
-  dockerImageId: String = "",
   @(Indexed@field)(unique = true) dockerContainerId: String = "",
   names: Array[String] = Array[String](),
   image: String = "",
