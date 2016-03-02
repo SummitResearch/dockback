@@ -1,24 +1,23 @@
 var request = require('request');
 
-if( process.argv.length != 6 ) {
-    console.log( "Usage: create_host restHost name description schedule" );
+if( process.argv.length != 5 ) {
+    console.log( "Usage: create_host restHost dockerHostId containerId " );
 } else {
 
     var restHost = process.argv[2];
-    var name = process.argv[3];
-    var description = process.argv[4];
-    var schedule = process.argv[5];
+    var dockerHostId = process.argv[3];
+    var containerId = process.argv[4];
 
-    console.log( "Creating new policy for: " + name);
+    console.log( "Creating new checkpoint for: " + containerId);
 
     var options = {
-        uri: 'https://' + restHost + ':8443/policy',
+        uri: 'https://' + restHost + ':8443/host/' + dockerHostId + '/container/' + containerId + '/checkpoint',
         method: 'POST',
-        json: {
-            "name": name,
-            "description": description,
-            "schedule": schedule
-        },
+        //json: {
+        //    "name": name,
+        //    "description": description,
+        //    "schedule": schedule
+        //},
         headers: {
             'Authorization': 'Basic ' + new Buffer('admin:Awesome123!').toString('base64')
         },
