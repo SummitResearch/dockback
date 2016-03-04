@@ -1,6 +1,7 @@
 package dockback.rest.controllers
 
 import java.util
+import java.util.Date
 
 import dockback.domain.docker.{DockerPartialImage, DockerInfo}
 import dockback.domain._
@@ -255,6 +256,18 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     val restTemplate = new RestTemplate()
 
     restTemplate.getForObject(s"http://${host.hostname}:${host.port}/containers/${containerFromMongo.dockerContainerId}/json", classOf[String] )
+
+  }
+
+  @RequestMapping(value = Array("/host/{hostId}/container/{containerId}/checkpoint"), method = Array(RequestMethod.POST))
+  def checkPointContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : Checkpoint = {
+    val host = hostRepository.findOne( hostId )
+    val containerFromMongo = containerRepository.findOne( containerId )
+    val restTemplate = new RestTemplate()
+
+    //todo save checkpoint to repository
+
+    Checkpoint(null, "", new Date().getTime, "", Bundle(null, "", BundleStats(new Date().getTime, InodeInfo(), ""), BundleInfo(new Date().getTime, InodeInfo(), "")))
 
   }
 

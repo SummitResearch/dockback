@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Doughnut</title>
+  <meta name="description" content="">
+  <script src="../bower_components/jquery/dist/jquery.js"></script>
+  <script src="../bower_components/jquery-ui/jquery-ui.js"></script>
+  <script src="../bower_components/highcharts/highcharts.js"></script>
+  <script src="../bower_components/highcharts/highcharts-3d.js"></script>
+  <script src="../bower_components/highcharts/modules/exporting.js"></script>
+  <script src="../bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
+  <!--script src="../bower_components/highcharts-ng/dist/highcharts-ng.js"></script-->
+  <link rel="stylesheet" href="../bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css">
+  <link rel="stylesheet" href="../styles/main.css">
+
+  <script>
+    $(function () {
+      $('#container_1').highcharts({
+        chart: {
+          type: 'pie',
+          options3d: {
+            enabled: true,
+            alpha: 45
+          }
+        },
+        title: {
+          text: 'Prometheuns Dockback Host - 10.99.0.67'
+        },
+        subtitle: {
+          text: '3D donut in Highcharts'
+        },
+        plotOptions: {
+          pie: {
+            innerSize: 150,
+            depth: 45
+          }
+        },
+        series: [{
+          name: 'Image virtual size',
+          data: [
+            ['DockerImg_1', 420],
+            ['DockerImg_2', 310],
+            ['DockerImg_3', 210],
+            ['DockerImg_4', 301]
+          ]
+        }]
+      });
+    });
+    $(function () {
+      new Slider("#ex17b", {step : 1,
+        min  : 0,
+        max  : 100,
+        value: 50,
+        orientation: 'vertical',
+        tooltip_position:'right',
+        formatter: function(){return "Click to restore checkpoint " + this.value + "  ";}
+         });
+    });
+
+  </script>
+
+</head>
+<body>
+<div id="container_1" style="height: 400px"></div>
+<div class="centered"><input id="ex17b" type="text"/></div>
+<!--div ng-controller="FishinstanceCtrl">
+<highchart id="chart1" config="highchartsNG"></highchart>
+</div-->
+</body>
+</html>

@@ -1,12 +1,13 @@
 var request = require('request');
 
-if( process.argv.length != 5 ) {
-    console.log( "Usage: create_host restHost name description" );
+if( process.argv.length != 6 ) {
+    console.log( "Usage: create_host restHost name description schedule" );
 } else {
 
     var restHost = process.argv[2];
     var name = process.argv[3];
     var description = process.argv[4];
+    var schedule = process.argv[5];
 
     console.log( "Creating new policy for: " + name);
 
@@ -15,7 +16,8 @@ if( process.argv.length != 5 ) {
         method: 'POST',
         json: {
             "name": name,
-            "description": description
+            "description": description,
+            "schedule": schedule
         },
         headers: {
             'Authorization': 'Basic ' + new Buffer('admin:Awesome123!').toString('base64')

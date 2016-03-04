@@ -17,7 +17,8 @@ class PolicyController @Autowired() ( policyRepository: PolicyRepository ) {
     val newPolicy = new Policy(
       id = null,
       name = request.name,
-      description = request.description
+      description = request.description,
+      schedule = request.schedule
     )
 
     policyRepository.insert( newPolicy )
@@ -49,7 +50,8 @@ class PolicyController @Autowired() ( policyRepository: PolicyRepository ) {
     val updatedPolicy = new Policy(
       id = device.id,
       name = request.name,
-      description = request.description
+      description = request.description,
+      schedule = request.schedule
     )
 
     policyRepository.save( updatedPolicy )
