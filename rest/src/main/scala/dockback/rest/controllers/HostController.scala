@@ -7,6 +7,7 @@ import dockback.domain.docker.{DockerPartialImage, DockerInfo}
 import dockback.domain._
 import dockback.dto.{CreateHostRequest, UpdateHostRequest}
 import dockback.rest.repositories._
+import dockback.rest.service.CheckpointDispatchService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DuplicateKeyException
@@ -17,7 +18,7 @@ import org.springframework.web.client.{RestClientException, RestTemplate}
 import collection.JavaConversions._
 
 @RestController
-class HostController @Autowired() ( hostRepository: HostRepository, imageRepository: ImageRepository, containerRepository: ContainerRepository ) {
+class HostController @Autowired() ( hostRepository: HostRepository, imageRepository: ImageRepository, containerRepository: ContainerRepository, checkpointDispatchService: CheckpointDispatchService ) {
 
   val logger = LoggerFactory.getLogger( classOf[HostController])
 
@@ -267,7 +268,11 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
     //todo save checkpoint to repository
 
-    Checkpoint(null, "", new Date().getTime, "", Bundle(null, "", BundleStats(new Date().getTime, InodeInfo(), ""), BundleInfo(new Date().getTime, InodeInfo(), "")))
+    val checkpoint = Checkpoint(null, "", new Date().getTime, "", Bundle(null, "", BundleStats(new Date().getTime, InodeInfo(), ""), BundleInfo(new Date().getTime, InodeInfo(), "")))
+
+    checkpointDispatchService.runCheckpoint( checkpoint )
+
+    checkpoint
 
   }
 
