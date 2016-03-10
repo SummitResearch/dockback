@@ -5,8 +5,9 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document
 case class Checkpoint(
   id: String,
-  checkpointId: String,
+  containerId: String,
   timestamp: Long,
   path: String,
-  bundle: Bundle
+  bundle: Bundle,
+  status: CheckpointStatus
 )

@@ -18,7 +18,7 @@ import org.springframework.web.client.{RestClientException, RestTemplate}
 import collection.JavaConversions._
 
 @RestController
-class HostController @Autowired() ( hostRepository: HostRepository, imageRepository: ImageRepository, containerRepository: ContainerRepository, checkpointDispatchService: CheckpointDispatchService ) {
+class HostController @Autowired() ( hostRepository: HostRepository, imageRepository: ImageRepository, containerRepository: ContainerRepository, checkpointDispatchService: CheckpointDispatchService, checkpointRepository: CheckpointRepository ) {
 
   val logger = LoggerFactory.getLogger( classOf[HostController])
 
@@ -268,12 +268,21 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
     //todo save checkpoint to repository
 
-    val checkpoint = Checkpoint(null, "", new Date().getTime, "", Bundle(null, "", BundleStats(new Date().getTime, InodeInfo(), ""), BundleInfo(new Date().getTime, InodeInfo(), "")))
+    val checkpoint = Checkpoint(null, containerId, new Date().getTime, "", Bundle(null, "", BundleStats(new Date().getTime, InodeInfo(), ""), BundleInfo(new Date().getTime, InodeInfo(), "")), CheckpointStatus.PENDING)
 
-    checkpointDispatchService.runCheckpoint( checkpoint )
+    checkpointRepository.insert(checkpoint)
+
+    checkpointDispatchService.runCheckpoint( host, containerFromMongo, checkpoint )
 
     checkpoint
 
+  }
+
+  @RequestMapping(value = Array("/host/{hostId}/container/{containerId}/checkpoint"), method = Array(RequestMethod.GET))
+  def getCheckpointsForContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : java.util.List[Checkpoint] = {
+    val host = hostRepository.findOne( hostId )
+    val containerFromMongo = containerRepository.findOne( containerId )
+    checkpointRepository.findByContainerId( containerId )
   }
 
   @ResponseStatus(value = HttpStatus.CONFLICT, reason = "duplicate field")

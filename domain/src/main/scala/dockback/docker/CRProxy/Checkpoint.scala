@@ -92,7 +92,7 @@ class Checkpoint(host: String, user: String, password: String, containerId: Stri
   def saveCheckpointFileSystemInfo(bundeFileStats: String) {
     // split the stat string result into a map
     // then instance FileSystemInfo and populate based on field values
-    var test: String = "name:/root/backups/dkbfs/4eeff70a7930.dkbfs.container.bundle.tar accessRights:-rw-r--r-- createDate:0 lastAccessDate:1457064676 groupName:root groupId:0 userIdOwner:0 userNameOwner:root  fileSsyType:0"
+    var test: String = "name:/root/backups/dkbfs/4eeff70a7930.dkbfs.container.bundle.tar accessRights:-rw-r--r-- createDate:0 lastAccessDate:1457064676 groupName:root groupId:0 userIdOwner:0 userNameOwner:root  fileSysType:0"
     // there is an error in the scala shell command package that is not returning the proper result, hard coding to test.
     val result = test.split(" ").map(_ split ":") collect { case Array(k,v) => (k,v)} toMap
     var fileSysInfo = new FileSystemInfo()
