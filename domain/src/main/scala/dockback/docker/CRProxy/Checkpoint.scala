@@ -19,6 +19,8 @@ class Checkpoint(host: String, user: String, password: String, containerId: Stri
    * 	note: this option is not known to be working in this version of the docker, in all cases it appears the 
    * 	checkpointed container is stopped.
    * 
+   * return the filesysteminfo object from the exec, and write the bundle to the local file system (structured fs)
+   * 
    */
   
   var defaultUser: String = "dockback"
@@ -37,7 +39,7 @@ class Checkpoint(host: String, user: String, password: String, containerId: Stri
   var result = "" //new Array[String](50)
   var responseResults = new Array[String](500)
   
-  def exec() {
+  def exec() : FileSystemInfo = {
     // scrub parms for use of default values if not defined
     if (user == null) {cpUser = defaultUser} else cpUser = user
     if (password == null) {cpPassword = defaultPassword} else cpPassword = password
