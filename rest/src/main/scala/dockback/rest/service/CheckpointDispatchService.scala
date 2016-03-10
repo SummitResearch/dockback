@@ -11,7 +11,11 @@ class CheckpointDispatchService {
   def runCheckpoint( checkpoint: Checkpoint ) : Boolean = {
     println( "Do the checkpoint." )
 
+//    new dockback.docker.CRProxy.Checkpoint().exec()
+
     true
+
   }
 
 }
+
