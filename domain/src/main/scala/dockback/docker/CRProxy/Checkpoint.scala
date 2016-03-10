@@ -11,10 +11,13 @@ class Checkpoint(host: String, user: String, password: String, containerId: Stri
    * user: (Optional)
    * password: (Optional)
    * containerId: (Required) of the container to checkpoint
+   * TODO: change to allow a list of containers to be restored. 
    * imageDir: (Optional) is the directory to store checkpoint image files
    * dbkBundleRepoDir (Optional) is the dockback repo directory where image bundles will be stores as a .tar file 
    * workDir: (Optional) is the directory for storing log file 
    * leaveRunning: (Optional) boolean to leave the container running after checkpointing, default is false for docker
+   * 	note: this option is not known to be working in this version of the docker, in all cases it appears the 
+   * 	checkpointed container is stopped.
    * 
    */
   
@@ -52,6 +55,7 @@ class Checkpoint(host: String, user: String, password: String, containerId: Stri
     //store container name, OS, ID to mongoDB
     storeContainerInfo(responseResults)
   }
+  
   def storeContainerInfo(responseResults: Array[String]) {
     // may have TimG persist the results, not doing it here. 
     //val mongoClient = MongoClient()
