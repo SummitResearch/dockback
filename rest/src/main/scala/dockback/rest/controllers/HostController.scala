@@ -18,7 +18,7 @@ import org.springframework.web.client.{RestClientException, RestTemplate}
 import collection.JavaConversions._
 
 @RestController
-class HostController @Autowired() ( hostRepository: HostRepository, imageRepository: ImageRepository, containerRepository: ContainerRepository, checkpointDispatchService: CheckpointDispatchService ) {
+class HostController @Autowired() ( hostRepository: HostRepository, imageRepository: ImageRepository, containerRepository: ContainerRepository, checkpointDispatchService: CheckpointDispatchService, checkpointRepository: CheckpointRepository ) {
 
   val logger = LoggerFactory.getLogger( classOf[HostController])
 
@@ -268,9 +268,11 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
     //todo save checkpoint to repository
 
-    val checkpoint = Checkpoint(null, "", new Date().getTime, "", Bundle(null, "", BundleStats(new Date().getTime, InodeInfo(), ""), BundleInfo(new Date().getTime, InodeInfo(), "")))
+    val checkpoint = Checkpoint(null, "", new Date().getTime, "", Bundle(null, "", BundleStats(new Date().getTime, InodeInfo(), ""), BundleInfo(new Date().getTime, InodeInfo(), "")), CheckpointStatus.PENDING)
 
-    checkpointDispatchService.runCheckpoint( checkpoint )
+    checkpointRepository.insert(checkpoint)
+
+    checkpointDispatchService.runCheckpoint( host, containerFromMongo, checkpoint )
 
     checkpoint
 

@@ -8,5 +8,6 @@ case class Checkpoint(
   checkpointId: String,
   timestamp: Long,
   path: String,
-  bundle: Bundle
+  bundle: Bundle,
+  status: CheckpointStatus
 )
