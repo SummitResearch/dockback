@@ -268,7 +268,7 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
     //todo save checkpoint to repository
 
-    val checkpoint = Checkpoint(null, "", new Date().getTime, "", Bundle(null, "", BundleStats(new Date().getTime, InodeInfo(), ""), BundleInfo(new Date().getTime, InodeInfo(), "")), CheckpointStatus.PENDING)
+    val checkpoint = Checkpoint(null, containerId, new Date().getTime, "", Bundle(null, "", BundleStats(new Date().getTime, InodeInfo(), ""), BundleInfo(new Date().getTime, InodeInfo(), "")), CheckpointStatus.PENDING)
 
     checkpointRepository.insert(checkpoint)
 
@@ -276,6 +276,13 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
     checkpoint
 
+  }
+
+  @RequestMapping(value = Array("/host/{hostId}/container/{containerId}/checkpoint"), method = Array(RequestMethod.GET))
+  def getCheckpointsForContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : java.util.List[Checkpoint] = {
+    val host = hostRepository.findOne( hostId )
+    val containerFromMongo = containerRepository.findOne( containerId )
+    checkpointRepository.findByContainerId( containerId )
   }
 
   @ResponseStatus(value = HttpStatus.CONFLICT, reason = "duplicate field")
