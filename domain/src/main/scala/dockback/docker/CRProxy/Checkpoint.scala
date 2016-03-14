@@ -51,10 +51,6 @@ class Checkpoint(host: String, user: String, password: String, containerId: Stri
     
     var result = runCheckpoint()
     result = bundleAndRecordCheckpointContent()
-    //copyContentBundle()
-    
-    //store container name, OS, ID to mongoDB
-    //storeContainerInfo(responseResults)
     return result 
   }
   
