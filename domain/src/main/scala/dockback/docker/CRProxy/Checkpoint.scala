@@ -37,7 +37,7 @@ class Checkpoint(host: String, user: String, password: String, containerId: Stri
   var cpLeaveRunning: Boolean = _
   
   var result = "" //new Array[String](50)
-  var responseResults = new Array[String](500)
+  var responseResults = ""
   var responseCode = ""
   var responseMessage = ""
   
@@ -72,7 +72,6 @@ class Checkpoint(host: String, user: String, password: String, containerId: Stri
         //TODO: check for errors and return an error code if this fails.
         // example errors: "no such id" | "cannot checkpoint container...CRIU version must be 1.5.2 or higher" 
       }
-      try  
       if (responseCode(0).toInt > 0) {defaultFileSystemInfo.errorCode = responseCode(0).toString()}
       return defaultFileSystemInfo
   }

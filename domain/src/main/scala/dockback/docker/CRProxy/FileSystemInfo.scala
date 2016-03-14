@@ -15,5 +15,4 @@ case class FileSystemInfo() {
   var fileSystemType: String = _
   var errorCode: String = _
   var errorMessage: String = _
-  
 }
