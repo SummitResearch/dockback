@@ -1,6 +1,6 @@
 package dockback.docker.CRProxy
 
-class FileSystemInfo {
+case class FileSystemInfo() {
   var containerId: String = _
   var fileName: String = _
   var path: String = _
@@ -13,5 +13,7 @@ class FileSystemInfo {
   var userIdOfOwner: String = _
   var userNameOfOwner: String = _
   var fileSystemType: String = _
+  var errorCode: String = _
+  var errorMessage: String = _
   
 }
