@@ -5,7 +5,7 @@ object TestMain {
   def main(args: Array[String]): Unit = {
     //"192.168.39.132", "dockback", "changeme"
     println("metaInfo main test output")
-    var host = "192.168.39.130"
+    var host = "192.168.39.132"
     var user = "dockback"
     var password = "changeme"
     var containerId = "4eeff70a7930"
