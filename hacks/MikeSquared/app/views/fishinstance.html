@@ -11,12 +11,12 @@
   <script src="../bower_components/highcharts/highcharts-3d.js"></script>
   <script src="../bower_components/highcharts/modules/exporting.js"></script>
   <script src="../bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
-  <!--script src="../bower_components/highcharts-ng/dist/highcharts-ng.js"></script-->
+  <script src="../bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
   <link rel="stylesheet" href="../bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css">
   <link rel="stylesheet" href="../styles/main.css">
 
   <script>
-    $(function () {
+   /* $(function () {
       $('#container_1').highcharts({
         chart: {
           type: 'pie',
@@ -47,7 +47,7 @@
           ]
         }]
       });
-    });
+    });*/
     $(function () {
       new Slider("#ex17b", {step : 1,
         min  : 0,
@@ -62,11 +62,9 @@
   </script>
 
 </head>
-<body>
-<div id="container_1" style="height: 400px"></div>
-<div class="centered"><input id="ex17b" type="text"/></div>
-<!--div ng-controller="FishinstanceCtrl">
+<body ng-controller="FishinstanceCtrl">
 <highchart id="chart1" config="highchartsNG"></highchart>
-</div-->
+<!--div id="container_1" style="height: 400px"></div-->
+<div class="centered"><input id="ex17b" type="text"/></div>
 </body>
 </html>
