@@ -17,7 +17,7 @@ object FullImageExtractor {
     (JsPath \ "Architecture").read[String] and
     (JsPath \ "Os").read[String] and
     (JsPath \ "DockerVersion").read[String] and
-    (JsPath \ "Config" \ "Cmd").read[Array[String]]
+    (JsPath \ "Config" \ "Cmd").readNullable[Array[String]]
   )(FullImageHolder.apply _)
 
   def extract(jsImage: JsValue): Image = {
@@ -27,7 +27,7 @@ object FullImageExtractor {
     Image( dockerImageId = fullImage.dockerImageId, parentId = fullImage.parentId,
       repoTags = fullImage.repoTags, createdString = fullImage.createdString, size = fullImage.size,
       virtualSize = fullImage.virtualSize, architecture = fullImage.architecture, os = fullImage.os,
-      dockerVersion = fullImage.dockerVersion, cmd = fullImage.cmd )
+      dockerVersion = fullImage.dockerVersion, cmd = fullImage.cmd.getOrElse(Array("")) )
 
   }
 
@@ -41,7 +41,7 @@ object FullImageExtractor {
     architecture: String,
     os: String,
     dockerVersion: String,
-    cmd: Array[String]
+    cmd: Option[Array[String]] = Some(Array(""))
   )
 }
 
