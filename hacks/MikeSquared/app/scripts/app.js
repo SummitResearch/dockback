@@ -18,7 +18,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-      'highcharts-ng'
+      'highcharts-ng',
+      'rzModule'
   ])
   .config(function ($routeProvider) {
     $routeProvider

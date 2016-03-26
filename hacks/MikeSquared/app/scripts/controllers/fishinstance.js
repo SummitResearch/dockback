@@ -8,8 +8,17 @@
  * Controller of the fishboneApp
  */
 angular.module('fishboneApp')
-  .controller('FishinstanceCtrl', function ($scope) {
-    $scope.highchartsNG = {
+  .controller('FishinstanceCtrl', function ($scope, $timeout) {
+      this.donutdata = [
+          ['Container_1', 420],
+          ['Container_2', 310],
+          ['Container_3', 210],
+          ['Container_4', 301]
+      ];
+
+      $scope.showSlider = false;
+
+      $scope.highchartsNG = {
         options: {
             chart: {
                 type: 'pie',
@@ -20,30 +29,44 @@ angular.module('fishboneApp')
             },
             plotOptions: {
                 pie: {
+                    allowPointSelect: true,
                     innerSize: 150,
-                    depth: 45
+                    depth: 45,
+                    events:{
+                        click:function(event){
+                            //alert(event + " " + this.y);
+                            $scope.showSlider = !$scope.showSlider;
+                            //if ($scope.showSlider) {
+                                $timeout(function () {
+                                    $scope.$broadcast('rzSliderForceRender');
+                                });
+                            //}
+                        }
+                    }
                 }
             }
         },
         title: {
-            text: 'Prometheuns Dockback Host - 10.99.0.67'
+            text: 'MY DOCKER CONTAINERS'
         },
         subtitle: {
-            text: '3D donut in Highcharts'
+            text: 'Host: 10.99.0.67'
         },
         series: [{
-            name: 'Image virtual size',
-            data: [
-                ['DockerImg_1', 420],
-                ['DockerImg_2', 310],
-                ['DockerImg_3', 210],
-                ['DockerImg_4', 301]
-            ]
+            allowPointSelection: true,
+            name: 'Container size',
+            data: this.donutdata
         }]
     }
-    this.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+
+      //Vertical sliders
+      $scope.verticalSlider1 = {
+          value: 0,
+          options: {
+              floor: 0,
+              ceil: 10,
+              vertical: true,
+              showTicks: true
+          }
+      };
   });

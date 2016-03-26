@@ -59,11 +59,10 @@ body {
   margin-top: 28px;
 }
 
-.centered {
-  position: fixed;
-  top: 60%;
-  left: 50%;
-  /*transform: translate(-50%, -50%);*/
+.centered
+{
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* Responsive: Portrait tablets and up */
@@ -87,4 +86,12 @@ body {
   .jumbotron {
     border-bottom: 0;
   }
+}
+
+.vertical-sliders {
+  margin-left: 46%;
+  margin-top: -2%;
+}
+.vertical-sliders > div {
+  height: 250px;
 }
