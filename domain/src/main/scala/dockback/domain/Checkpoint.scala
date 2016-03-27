@@ -1,5 +1,6 @@
 package dockback.domain
 
+import dockback.docker.CRProxy.FileSystemInfo
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
@@ -9,5 +10,6 @@ case class Checkpoint(
   timestamp: Long,
   path: String,
   bundle: Bundle,
-  status: CheckpointStatus
+  status: CheckpointStatus,
+  fileSystemInfo: FileSystemInfo = FileSystemInfo()
 )

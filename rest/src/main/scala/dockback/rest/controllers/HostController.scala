@@ -278,6 +278,16 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
   }
 
+  @RequestMapping(value = Array("/checkpoint"), method = Array(RequestMethod.GET))
+  def readAllCheckpoints() : java.util.List[Checkpoint] = {
+    checkpointRepository.findAll()
+  }
+
+  @RequestMapping(value = Array("/checkpoint/(checkpointId}"), method = Array(RequestMethod.GET))
+  def readCheckpoint( @PathVariable("checkpointId") checkpointId: String) : Checkpoint = {
+    checkpointRepository.findOne(checkpointId)
+  }
+
   @RequestMapping(value = Array("/host/{hostId}/container/{containerId}/checkpoint"), method = Array(RequestMethod.GET))
   def getCheckpointsForContainer( @PathVariable("hostId") hostId: String, @PathVariable("containerId") containerId: String ) : java.util.List[Checkpoint] = {
     val host = hostRepository.findOne( hostId )
