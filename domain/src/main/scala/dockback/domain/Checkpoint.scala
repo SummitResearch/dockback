@@ -11,5 +11,9 @@ case class Checkpoint(
   path: String,
   bundle: Bundle,
   status: CheckpointStatus,
-  fileSystemInfo: FileSystemInfo = FileSystemInfo()
+  fileSystemInfo: FileSystemInfo = FileSystemInfo(),
+  restored: Boolean = false,
+  restoreTime: Long = 0L,
+  restoredContainerName: String = "",
+  restoredContainerId: String = ""
 )

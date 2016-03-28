@@ -3,9 +3,9 @@ package dockback.rest.controllers
 import java.util
 import java.util.Date
 
-import dockback.domain.docker.{DockerPartialImage, DockerInfo}
+import dockback.domain.docker.{DockerInfo, DockerPartialImage}
 import dockback.domain._
-import dockback.dto.{CreateHostRequest, UpdateHostRequest}
+import dockback.dto.{CreateHostRequest, CreateRestoreRequest, UpdateHostRequest}
 import dockback.rest.repositories._
 import dockback.rest.service.CheckpointDispatchService
 import org.slf4j.LoggerFactory
@@ -266,8 +266,6 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
     val containerFromMongo = containerRepository.findOne( containerId )
     val restTemplate = new RestTemplate()
 
-    //todo save checkpoint to repository
-
     val checkpoint = Checkpoint(null, containerId, new Date().getTime, "", Bundle(null, "", BundleStats(new Date().getTime, InodeInfo(), ""), BundleInfo(new Date().getTime, InodeInfo(), "")), CheckpointStatus.PENDING)
 
     checkpointRepository.insert(checkpoint)
@@ -276,16 +274,6 @@ class HostController @Autowired() ( hostRepository: HostRepository, imageReposit
 
     checkpoint
 
-  }
-
-  @RequestMapping(value = Array("/checkpoint"), method = Array(RequestMethod.GET))
-  def readAllCheckpoints() : java.util.List[Checkpoint] = {
-    checkpointRepository.findAll()
-  }
-
-  @RequestMapping(value = Array("/checkpoint/(checkpointId}"), method = Array(RequestMethod.GET))
-  def readCheckpoint( @PathVariable("checkpointId") checkpointId: String) : Checkpoint = {
-    checkpointRepository.findOne(checkpointId)
   }
 
   @RequestMapping(value = Array("/host/{hostId}/container/{containerId}/checkpoint"), method = Array(RequestMethod.GET))

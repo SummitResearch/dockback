@@ -11,6 +11,16 @@ import org.springframework.stereotype.Service
 class CheckpointDispatchService  @Autowired() ( checkpointRepository: CheckpointRepository ) {
 
   @Async
+  def restore(host: Host, container: Container, checkpoint: Checkpoint) : Unit = {
+
+    val result = new dockback.docker.CRProxy.Checkpoint( host.hostname, host.sshUser, host.sshPassword, container.dockerContainerId, null, null, null, true ).exec()
+
+    val updatedCheckpoint = checkpoint.copy( restored = true, restoreTime = System.currentTimeMillis(), restoredContainerName = "restored_container", restoredContainerId = "some_id" )
+    checkpointRepository.save( updatedCheckpoint )
+
+  }
+
+  @Async
   def runCheckpoint( host: Host, container: Container, checkpoint: Checkpoint ) : Unit = {
 
     val result = new dockback.docker.CRProxy.Checkpoint( host.hostname, host.sshUser, host.sshPassword, container.dockerContainerId, null, null, null, true ).exec()
