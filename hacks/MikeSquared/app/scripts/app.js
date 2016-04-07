@@ -19,9 +19,11 @@ angular
     'ngSanitize',
     'ngTouch',
       'highcharts-ng',
-      'rzModule'
+      'rzModule',
+      'ngResource',
+      'restangular'
   ])
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, RestangularProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -41,4 +43,8 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+      var newBaseUrl = "https://localhost:8443";
+      RestangularProvider.setDefaultHeaders({'Authorization': 'Basic YWRtaW46QXdlc29tZTEyMyE='});
+      RestangularProvider.setBaseUrl(newBaseUrl);
+
   });
