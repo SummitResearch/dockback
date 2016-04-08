@@ -137,6 +137,7 @@ angular.module('fishboneApp')
       //console.log(rAhosts);
       $http.defaults.headers.common = {'Authorization' : 'Basic YWRtaW46QXdlc29tZTEyMyE='};
       $http.defaults.headers.common = {'Accept' : 'application/json'};
+      $http.withCredentials = true;
       //$http.defaults.headers.common = {'rejectUnauthorized' : false };
       var hosts = Host.query(function(){
           console.log(hosts);

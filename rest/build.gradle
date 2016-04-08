@@ -4,11 +4,12 @@ apply plugin: "com.github.maiflai.scalatest"
 dependencies {
 
     compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.6.1'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-data-mongodb"
     compile "org.springframework.boot:spring-boot-starter-amqp"
-    compile "org.springframework.boot:spring-boot-starter-security"
+//    compile "org.springframework.boot:spring-boot-starter-security"
 
     compile "com.typesafe.play:play-json_2.11:2.4.6"
 
