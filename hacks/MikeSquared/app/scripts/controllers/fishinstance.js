@@ -7,14 +7,43 @@
  * # FishinstanceCtrl
  * Controller of the fishboneApp
  */
-angular.module('fishboneApp').factory('Host', function($resource) {
-    return $resource('https://localhost:8443/host'); // Note the full endpoint address
+//angular.module('fishboneApp')
+//    .factory('Containers', function($resource) {
+//
+//        var urlBase = 'http://192.168.174.129:2375';
+//
+//        return $resource(urlBase+'/containers/json'); // Note the full endpoint address
+//});
+//
+//angular.module('fishboneApp').factory('Images', function($resource) {
+//    return $resource('http://192.168.174.129:2375/images/json'); // Note the full endpoint address
+//});
+
+angular.module("fishboneApp", ["restangular"]).config(function(RestangularProvider) {
+    //set the base url for api calls on our RESTful services
+    var newBaseUrl = "";
+    if (window.location.hostname == "localhost") {
+        newBaseUrl = "http://192.168.174.129:2375";
+    } else {
+        var deployedAt = window.location.href.substring(0, window.location.href);
+        newBaseUrl = deployedAt + "/";
+    }
+    RestangularProvider.setBaseUrl(newBaseUrl);
+    RestangularProvider.setDefaultHeaders({
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+    });
+    RestangularProvider.setDefaultHttpFields({
+        'withCredentials': true
+    });
 });
 
+
+
 angular.module('fishboneApp')
-  .controller('FishinstanceCtrl', function ($scope, $timeout, Restangular, Host, $http) {
+  .controller('FishinstanceCtrl', function ($scope, $timeout, Restangular) {
       this.donutdata = [
-          ['Container_1', 420],
+          ['Container _1', 420],
           ['Container_2', 310],
           ['Container_3', 210],
           ['Container_4', 301]
@@ -125,29 +154,46 @@ angular.module('fishboneApp')
           }
       };
 
-      //Play with the rest calls
-      $scope.hosts = "123";
-      //var restHosts = Restangular.one('host','5704034ebe173d32d5b782ea');
-      //var hosts = restHosts.get('5704034ebe173d32d5b782ea');
-      //var restHosts = Restangular.all('host');
-      //var rAhosts = restHosts.getList().$object;
-      //this.restHosts.getList().then(function(hosts){
-      //    this.hosts = hosts;
-      //});
-      //console.log(rAhosts);
-      $http.defaults.headers.common = {'Authorization' : 'Basic YWRtaW46QXdlc29tZTEyMyE='};
-      $http.defaults.headers.common = {'Accept' : 'application/json'};
-      $http.withCredentials = true;
-      //$http.defaults.headers.common = {'rejectUnauthorized' : false };
-      var hosts = Host.query(function(){
-          console.log(hosts);
+      $scope.containers = {};
+
+      Restangular.all('containers').getList().then(function(data){
+          console.log(data);
+          //do something with the list of students
       });
-      if (hosts){
-          $scope.hosts = hosts;
-      }
-      //if (rAhosts){
-      //    $scope.hosts = rAhosts;
+
+      //console.log(Restangular.all('containers'));
+
+      //Containers.query(function(response) {
+      //    $scope.containers.issues = response;
+      //    angular.forEach($scope.containers, function(host) {
+      //                console.log("Host is:" + host.Id);
+      //            });
+      //});
+
+      //var hosts = Containers.query({}, function() {
+      //
+      //    $scope.hosts = hosts;
+      //    angular.forEach(hosts, function(host) {
+      //        console.log("Host is:" + host.Id);
+      //    })
+      //});
+
+      //var Hosts = $resource('http://192.168.174.129:2375/containers/json');
+      //
+      //Hosts.query(function(hosts){
+      //    angular.forEach(hosts, function(host) {
+      //        console.log("Host is:" + host);
+      //    })
+      //});
+
+
+      //if (hosts){
+      //    angular.forEach(hosts, function(host) {
+      //        console.log("Host name " + host);
+      //        $scope.host = host;
+      //    });
+      //    console.log("Hosts " + hosts);
+      //    //$scope.hosts = hosts;
       //}
 
-      //console.log(Restangular.getRequestedUrl);
   });
