@@ -19,29 +19,29 @@
 //    return $resource('http://192.168.174.129:2375/images/json'); // Note the full endpoint address
 //});
 
-angular.module("fishboneApp", ["restangular"]).config(function(RestangularProvider) {
-    //set the base url for api calls on our RESTful services
-    var newBaseUrl = "";
-    if (window.location.hostname == "localhost") {
-        newBaseUrl = "http://192.168.174.129:2375";
-    } else {
-        var deployedAt = window.location.href.substring(0, window.location.href);
-        newBaseUrl = deployedAt + "/";
-    }
-    RestangularProvider.setBaseUrl(newBaseUrl);
-    RestangularProvider.setDefaultHeaders({
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-    });
-    RestangularProvider.setDefaultHttpFields({
-        'withCredentials': true
-    });
-});
+//angular.module("fishboneApp", ["restangular"]).config(function(RestangularProvider) {
+//    //set the base url for api calls on our RESTful services
+//    var newBaseUrl = "";
+//    if (window.location.hostname == "localhost") {
+//        newBaseUrl = "http://192.168.174.129:2375";
+//    } else {
+//        var deployedAt = window.location.href.substring(0, window.location.href);
+//        newBaseUrl = deployedAt + "/";
+//    }
+//    RestangularProvider.setBaseUrl(newBaseUrl);
+//    RestangularProvider.setDefaultHeaders({
+//        'Content-Type': 'application/json',
+//        'X-Requested-With': 'XMLHttpRequest'
+//    });
+//    RestangularProvider.setDefaultHttpFields({
+//        'withCredentials': true
+//    });
+//});
 
 
 
 angular.module('fishboneApp')
-  .controller('FishinstanceCtrl', function ($scope, $timeout, Restangular) {
+  .controller('FishinstanceCtrl', function ($rootScope, $scope, $timeout, Restangular) {
       this.donutdata = [
           ['Container _1', 420],
           ['Container_2', 310],
@@ -60,7 +60,8 @@ angular.module('fishboneApp')
                 options3d: {
                     enabled: true,
                     alpha: 45
-                }
+                },
+                backgroundColor: 'transparent'
             },
             plotOptions: {
                 pie: {
@@ -156,44 +157,9 @@ angular.module('fishboneApp')
 
       $scope.containers = {};
 
-      Restangular.all('containers').getList().then(function(data){
+      Restangular.all('host/570cf4d9be173d54726e954d/container').getList().then(function(data){
           console.log(data);
           //do something with the list of students
       });
-
-      //console.log(Restangular.all('containers'));
-
-      //Containers.query(function(response) {
-      //    $scope.containers.issues = response;
-      //    angular.forEach($scope.containers, function(host) {
-      //                console.log("Host is:" + host.Id);
-      //            });
-      //});
-
-      //var hosts = Containers.query({}, function() {
-      //
-      //    $scope.hosts = hosts;
-      //    angular.forEach(hosts, function(host) {
-      //        console.log("Host is:" + host.Id);
-      //    })
-      //});
-
-      //var Hosts = $resource('http://192.168.174.129:2375/containers/json');
-      //
-      //Hosts.query(function(hosts){
-      //    angular.forEach(hosts, function(host) {
-      //        console.log("Host is:" + host);
-      //    })
-      //});
-
-
-      //if (hosts){
-      //    angular.forEach(hosts, function(host) {
-      //        console.log("Host name " + host);
-      //        $scope.host = host;
-      //    });
-      //    console.log("Hosts " + hosts);
-      //    //$scope.hosts = hosts;
-      //}
 
   });
