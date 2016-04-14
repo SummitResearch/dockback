@@ -1,1 +1,27 @@
-<p>This is the about view.</p>
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Doughnut</title>
+    <meta name="description" content="">
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/restangular/dist/restangular.js"></script>
+    <script src="../bower_components/lodash/lodash.js"></script>
+    <link rel="stylesheet" href="../styles/main.css">
+
+</head>
+<body ng-controller="AboutCtrl">
+<table border="1">
+<thead>REST API data</thead>
+
+    <tr>
+        <td><div class="container">{{theHosts}}</div></td>
+    </tr>
+    <tr>
+        <td><div class="container">{{theHost}}</div></td>
+    </tr>
+</table>
+
+</body>
+</html>
