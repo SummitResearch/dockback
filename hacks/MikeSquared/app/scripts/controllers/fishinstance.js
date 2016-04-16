@@ -7,37 +7,6 @@
  * # FishinstanceCtrl
  * Controller of the fishboneApp
  */
-//angular.module('fishboneApp')
-//    .factory('Containers', function($resource) {
-//
-//        var urlBase = 'http://192.168.174.129:2375';
-//
-//        return $resource(urlBase+'/containers/json'); // Note the full endpoint address
-//});
-//
-//angular.module('fishboneApp').factory('Images', function($resource) {
-//    return $resource('http://192.168.174.129:2375/images/json'); // Note the full endpoint address
-//});
-
-//angular.module("fishboneApp", ["restangular"]).config(function(RestangularProvider) {
-//    //set the base url for api calls on our RESTful services
-//    var newBaseUrl = "";
-//    if (window.location.hostname == "localhost") {
-//        newBaseUrl = "http://192.168.174.129:2375";
-//    } else {
-//        var deployedAt = window.location.href.substring(0, window.location.href);
-//        newBaseUrl = deployedAt + "/";
-//    }
-//    RestangularProvider.setBaseUrl(newBaseUrl);
-//    RestangularProvider.setDefaultHeaders({
-//        'Content-Type': 'application/json',
-//        'X-Requested-With': 'XMLHttpRequest'
-//    });
-//    RestangularProvider.setDefaultHttpFields({
-//        'withCredentials': true
-//    });
-//});
-
 
 
 angular.module('fishboneApp')
