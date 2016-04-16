@@ -15,8 +15,7 @@ class Restore(host: String, user: String, password: String, containerId: String,
    * allowShell: (Optional) allow restoring shell jobs. default to true
    * 
    */
-  
-  
+    
   var defaultUser: String = "dockback"
   var defaultPassword: String = "changeme"
   var defaultImageDir: String = "/root/backups/dkbfs/"
@@ -39,8 +38,8 @@ class Restore(host: String, user: String, password: String, containerId: String,
     if (user == null) {crUser = defaultUser} else crUser = user
     if (password == null) {crPassword = defaultPassword} else crPassword = password
     if (imageDir == null) {crImageDir = defaultImageDir} else crImageDir = imageDir
-    if (force == null) {crForce = defaultForce} else crForce = force
-    if (allowShell == null) {crAllowShell = defaultAllowShell} else crAllowShell = allowShell
+    //if (force == null) {crForce = defaultForce} else crForce = force
+    //if (allowShell == null) {crAllowShell = defaultAllowShell} else crAllowShell = allowShell
     
     getBundleAndExtractCheckpointContent()
     runRestore()
