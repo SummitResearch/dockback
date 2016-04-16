@@ -29,6 +29,7 @@ class ContainerJsonToObjectFactorySpec extends BaseSpec {
 //      assert(container.dockerContainerId.equals( "407195ab8b072ce8b237f664b8d032704e8047b8e64139cc2e017163f7161647" ))
 
     }
+
     scenario("parse an array of containers") {
       Given("an input JSON string with an array of containers")
 
