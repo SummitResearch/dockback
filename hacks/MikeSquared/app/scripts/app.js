@@ -39,7 +39,11 @@ angular
         templateUrl: 'views/fishinstance.html',
         controller: 'FishinstanceCtrl',
         controllerAs: 'fishinstance'
-      })
+      }).when('/fishinstance2', {
+            templateUrl: 'views/fishinstance2.html',
+            controller: 'FishinstanceCtrl2',
+            controllerAs: 'fishinstance2'
+        })
       .otherwise({
         redirectTo: '/'
       });
