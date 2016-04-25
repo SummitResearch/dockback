@@ -8,15 +8,17 @@
  * Controller of the fishboneApp
  */
 
-
 angular.module('fishboneApp')
   .controller('FishinstanceCtrl', function ($rootScope, $scope, $timeout, Restangular) {
+      $scope.activeTab = "fishInst";
       this.donutdata = [
           ['Container _1', 420],
           ['Container_2', 310],
           ['Container_3', 210],
           ['Container_4', 301]
       ];
+
+      this.points = [];
 
       $scope.showSlider = false;
       $scope.currentSlice = null;
@@ -44,6 +46,7 @@ angular.module('fishboneApp')
                                 $scope.currentSelected = this;
                                 this.select(true);
                                 swapSlider();
+                                setStepValues();
                                 //alert('Null' + ' ' + $scope.showSlider + ' ' + this.selected + ' ' + event.point.name);
                             }else{
                                 if ($scope.currentSlice === event.point.name){
@@ -58,6 +61,7 @@ angular.module('fishboneApp')
                                         this.select(true);
                                         if (!$scope.showSlider){
                                             swapSlider();
+                                            setStepValues();
                                         }
                                     }
                                 } else {
@@ -67,12 +71,12 @@ angular.module('fishboneApp')
                                     this.select(true);
                                     if (!$scope.showSlider){
                                         swapSlider();
+                                        setStepValues();
                                     }
                                     //alert('Not Equal' + $scope.currentSlice + ' ' + $scope.showSlider + ' ' + this.selected);
                                 }
 
                             }
-
                         }
 
                     }
@@ -83,7 +87,7 @@ angular.module('fishboneApp')
             text: 'MY DOCKER CONTAINERS'
         },
         subtitle: {
-            text: 'Host: 10.99.0.67'
+            text: 'Host: 172.16.105.212'
         },
         series: [{
             allowPointSelection: true,
@@ -101,34 +105,91 @@ angular.module('fishboneApp')
           });
       }
 
-      this.stepsValues = ['56f862a28ff1d218c84785c9',
-          '56f862a28ff1d218c8478777',
-          '56f862a28ff1d218c8478888',
-          '56f862a28ff1d218c8478555',
-          '56f862a28ff1d218c8478222',
-          '56f862a28ff1d218c8478999'];
+      //$scope.stepsValues = ['56f862a28ff1d218c84785c9',
+      //    '56f862a28ff1d218c8478777',
+      //    '56f862a28ff1d218c8478888',
+      //    '56f862a28ff1d218c8478555',
+      //    '56f862a28ff1d218c8478222',
+      //    '56f862a28ff1d218c8478999'];
+
 
       //Vertical sliders
       $scope.verticalSlider1 = {
-          value: '56f862a28ff1d218c84785c9',
+          //value: '56f862a28ff1d218c84785c9',
           minValue: 0,
-          maxValue: 5,
+          //maxValue: this.maxValue,
           options: {
-              stepsArray: this.stepsValues,
+              stepsArray: [],
               vertical: true,
               showTicks: true,
               showTickValues: true,
+              enforceStep: false,
+              ticksTooltip: function(value){
+
+                  if ($scope.checkpointDetails){
+                      var x;
+                      for(x in $scope.checkpointDetails){
+                          if (x === value.toString()){
+                              //var date = new Date($scope.checkpointDetails[x].timestamp);
+                              var dateVal ="/Date(" + $scope.checkpointDetails[x].timestamp + ")/";
+                              var date = new Date( parseFloat( dateVal.substr(6 )));
+                              return 'Time created is: ' +  (date.getMonth() + 1)
+                                                         + "/"
+                                                         + date.getDate()
+                                                         + "/"
+                                                         + date.getFullYear()
+                                                         + " "
+                                                         + date.getHours()
+                                                         + ":"
+                                                         + date.getMinutes()
+                                                         + ":"
+                                                         + date.getSeconds()
+                                                         + ":"
+                                                         + date.getMilliseconds()
+                          }
+                      }
+                  }
+              },
               ticksValuesTooltip: function(v){
                   return 'Select ' + v + ' to restore';
               }
           }
       };
 
-      $scope.containers = {};
+      //$scope.containers = {};
+      //
+      //Restangular.all('host/570cf4d9be173d54726e954d/container').getList().then(function(data){
+      //    console.log(data);
+      //    //do something with the list of students
+      //});
 
-      Restangular.all('host/570cf4d9be173d54726e954d/container').getList().then(function(data){
-          console.log(data);
-          //do something with the list of students
-      });
+      function setStepValues() {
+          var restHosts = Restangular.all('host');
+          restHosts.getList().then(function (hosts) {
+              $scope.theHosts = hosts;
+              $scope.theHost = hosts[0].id;
+          });
+          var oneCont = restHosts.one('570cf4d9be173d54726e954d','container');
+          var containers = oneCont.get();console.log(containers);
+          restHosts.all('570cf4d9be173d54726e954d/container/570cf513be173d54726e9555/checkpoint').getList().then(function (checkpoint) {
+              var x;
+              console.log(checkpoint.plain());
+              var checkpointsDetails = checkpoint.plain();
+              $scope.checkpointDetails = checkpointsDetails;
+              var points = [];
+
+              if (checkpointsDetails){
+                  for (var x=0; x < checkpointsDetails.length; x++){
+                     points.push(checkpointsDetails[x].id);
+                  }
+              }
+              //$rootScope.$broadcast('reCalcViewDimensions');
+              $scope.verticalSlider1.options.stepsArray = points;
+              console.log(points[0]);
+              $scope.verticalSlider1.value = points[0];
+              //$scope.verticalSlider1.options.ceil = points[points.length - 1];
+              $scope.verticalSlider1.maxValue = points.length - 1;
+          });
+      }
 
   });

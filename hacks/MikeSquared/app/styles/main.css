@@ -110,3 +110,7 @@
 .vertical-sliders > div {
   height: 250px;
 }
+
+.vertical-slider-small > div {
+  height: 50px;
+}

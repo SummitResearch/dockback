@@ -8,6 +8,9 @@
  *
  * Main module of the application.
  */
+
+//import tooltip from "../../../bower_components/angular-ui-bootstrap/src/tooltip";
+
 angular
   .module('fishboneApp', [
     'ngAnimate',
@@ -21,7 +24,8 @@ angular
       'highcharts-ng',
       'rzModule',
       'ngResource',
-      'restangular'
+      'restangular',
+      'ui.bootstrap'
   ])
   .config(function ($routeProvider, RestangularProvider) {
     $routeProvider
@@ -50,5 +54,4 @@ angular
       var newBaseUrl = "https://localhost:8443";
       //RestangularProvider.setDefaultHeaders({'Authorization': 'Basic YWRtaW46QXdlc29tZTEyMyE='});
       RestangularProvider.setBaseUrl(newBaseUrl);
-
   });

@@ -8,8 +8,9 @@
  * Controller of the fishboneApp
  */
 angular.module('fishboneApp')
-  .controller('MainCtrl', function () {
-    this.awesomeThings = [
+  .controller('MainCtrl', function ($scope) {
+      $scope.activeTab = "mainInst"
+      this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
