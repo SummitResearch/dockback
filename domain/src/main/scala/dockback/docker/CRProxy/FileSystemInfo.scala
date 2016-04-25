@@ -15,4 +15,6 @@ case class FileSystemInfo() {
   var fileSystemType: String = _
   var errorCode: String = _
   var errorMessage: String = _
+  var bundleName: String = _
+  var bundleLocation: String = _
 }
