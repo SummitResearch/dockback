@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <h3 class="modal-title">Restore Checkpoint Details</h3>
+</div>
+<div class="modal-body">
+    <ul>
+        <li>
+            Container Id:  {{ details.containerId }}
+        </li>
+        <li>
+            Checkpoint Id: {{ details.id }}
+        </li>
+        <li>
+            Status: {{ details.status }}
+        </li>
+        <li>
+            Restored: {{ details.restored }}
+        </li>
+        <li>
+            Time Created: {{ details.timestamp | timestampToDate}}
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Restore Checkpoint</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>

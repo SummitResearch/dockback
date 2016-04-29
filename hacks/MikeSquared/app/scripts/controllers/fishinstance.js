@@ -9,7 +9,7 @@
  */
 
 angular.module('fishboneApp')
-  .controller('FishinstanceCtrl', function ($rootScope, $scope, $timeout, Restangular) {
+  .controller('FishinstanceCtrl', function ($rootScope, $scope, $timeout, Restangular, $uibModal) {
       $scope.activeTab = "fishInst";
       this.donutdata = [
           ['Container _1', 420],
@@ -133,7 +133,7 @@ angular.module('fishboneApp')
                               //var date = new Date($scope.checkpointDetails[x].timestamp);
                               var dateVal ="/Date(" + $scope.checkpointDetails[x].timestamp + ")/";
                               var date = new Date( parseFloat( dateVal.substr(6 )));
-                              return 'Time created is: ' +  (date.getMonth() + 1)
+                              return 'Time created: ' +  (date.getMonth() + 1)
                                                          + "/"
                                                          + date.getDate()
                                                          + "/"
@@ -152,6 +152,13 @@ angular.module('fishboneApp')
               },
               ticksValuesTooltip: function(v){
                   return 'Select ' + v + ' to restore';
+              },
+              onChange: function(sliderId, modelValue, highValue){
+                  //This is where the logic to show the modal window
+                  //and pass the value of the checkpoint details related to the
+                  //checkpoint id
+                  $scope.open(modelValue);
+                  console.log($scope.verticalSlider1.options.stepsArray[modelValue]);
               }
           }
       };
@@ -191,5 +198,27 @@ angular.module('fishboneApp')
               $scope.verticalSlider1.maxValue = points.length - 1;
           });
       }
+
+      $scope.open = function (value) {
+
+          var modalInstance = $uibModal.open({
+              animation: true,
+              templateUrl: '../../views/sliderModal.html',
+              controller: 'ModalInstanceCtrl',
+              //size: size,
+              resolve: {
+                  details: function () {
+                      return $scope.checkpointDetails[value];
+                  }
+              }
+          });
+
+          //modalInstance.result.then(function (selectedItem) {
+          //    $scope.selected = selectedItem;
+          //}, function () {
+          //    console.log('Modal dismissed at: ' + new Date());
+          //});
+      };
+
 
   });
