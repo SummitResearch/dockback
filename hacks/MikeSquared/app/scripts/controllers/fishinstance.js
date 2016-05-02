@@ -130,45 +130,20 @@ angular.module('fishboneApp')
                       var x;
                       for(x in $scope.checkpointDetails){
                           if (x === value.toString()){
-                              //var date = new Date($scope.checkpointDetails[x].timestamp);
-                              var dateVal ="/Date(" + $scope.checkpointDetails[x].timestamp + ")/";
-                              var date = new Date( parseFloat( dateVal.substr(6 )));
-                              return 'Time created: ' +  (date.getMonth() + 1)
-                                                         + "/"
-                                                         + date.getDate()
-                                                         + "/"
-                                                         + date.getFullYear()
-                                                         + " "
-                                                         + date.getHours()
-                                                         + ":"
-                                                         + date.getMinutes()
-                                                         + ":"
-                                                         + date.getSeconds()
-                                                         + ":"
-                                                         + date.getMilliseconds()
+                              return 'Checkpoint creation time: ' + convertToDate($scope.checkpointDetails[x].timestamp);
                           }
                       }
                   }
-              },
-              ticksValuesTooltip: function(v){
-                  return 'Select ' + v + ' to restore';
               },
               onChange: function(sliderId, modelValue, highValue){
                   //This is where the logic to show the modal window
                   //and pass the value of the checkpoint details related to the
                   //checkpoint id
                   $scope.open(modelValue);
-                  console.log($scope.verticalSlider1.options.stepsArray[modelValue]);
+                  //console.log($scope.verticalSlider1.options.stepsArray[modelValue]);
               }
           }
       };
-
-      //$scope.containers = {};
-      //
-      //Restangular.all('host/570cf4d9be173d54726e954d/container').getList().then(function(data){
-      //    console.log(data);
-      //    //do something with the list of students
-      //});
 
       function setStepValues() {
           var restHosts = Restangular.all('host');
@@ -187,10 +162,12 @@ angular.module('fishboneApp')
 
               if (checkpointsDetails){
                   for (var x=0; x < checkpointsDetails.length; x++){
-                     points.push(checkpointsDetails[x].id);
+                     points.push(convertToDate(checkpointsDetails[x].timestamp));
                   }
               }
               //$rootScope.$broadcast('reCalcViewDimensions');
+              $scope.verticalSlider1.options.showTicks = true;
+              $scope.verticalSlider1.options.showTickValues = true;
               $scope.verticalSlider1.options.stepsArray = points;
               console.log(points[0]);
               $scope.verticalSlider1.value = points[0];
@@ -213,12 +190,26 @@ angular.module('fishboneApp')
               }
           });
 
-          //modalInstance.result.then(function (selectedItem) {
-          //    $scope.selected = selectedItem;
-          //}, function () {
-          //    console.log('Modal dismissed at: ' + new Date());
-          //});
       };
+
+      function convertToDate(longValue){
+              //var date = new Date($scope.checkpointDetails[x].timestamp);
+              var dateVal ="/Date(" + longValue + ")/";
+              var date = new Date( parseFloat( dateVal.substr(6 )));
+              return  (date.getMonth() + 1)
+                  + "/"
+                  + date.getDate()
+                  + "/"
+                  + date.getFullYear()
+                  + " "
+                  + date.getHours()
+                  + ":"
+                  + date.getMinutes()
+                  + ":"
+                  + date.getSeconds()
+                  + ":"
+                  + date.getMilliseconds()
+      }
 
 
   });
