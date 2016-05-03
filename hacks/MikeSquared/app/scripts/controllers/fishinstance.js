@@ -11,7 +11,8 @@
 angular.module('fishboneApp')
   .controller('FishinstanceCtrl', function ($rootScope, $scope, $timeout, Restangular, $uibModal) {
       $scope.activeTab = "fishInst";
-      this.donutdata = [
+      this.first = [];
+      $scope.donutdata = [
           ['Container _1', 420],
           ['Container_2', 310],
           ['Container_3', 210],
@@ -92,30 +93,34 @@ angular.module('fishboneApp')
         series: [{
             allowPointSelection: true,
             name: 'Container size',
-            data: this.donutdata
+            //data: this.first
+            data: (function(){
+               var data = [];
+                var i;
+                for(i = 0; i < $scope.donutdata.length; i++){
+                    data.push($scope.donutdata[i]);
+                }
+                return data;
+            }())
         }]
-    }
+    };
+
+      //$scope.highchartsNG.series[0].addPoint(this.donutdata[0]);
 
       //Convenience method to swap and show slider
       function swapSlider(){
           $scope.showSlider = !$scope.showSlider;
           $timeout(function () {
+              $scope.verticalSlider1.value = "Now";
               $rootScope.$broadcast('reCalcViewDimensions');
               $rootScope.$broadcast('rzSliderForceRender');
           });
-      }
-
-      //$scope.stepsValues = ['56f862a28ff1d218c84785c9',
-      //    '56f862a28ff1d218c8478777',
-      //    '56f862a28ff1d218c8478888',
-      //    '56f862a28ff1d218c8478555',
-      //    '56f862a28ff1d218c8478222',
-      //    '56f862a28ff1d218c8478999'];
+      };
 
 
       //Vertical sliders
       $scope.verticalSlider1 = {
-          //value: '56f862a28ff1d218c84785c9',
+          value: 'Now',
           minValue: 0,
           //maxValue: this.maxValue,
           options: {
@@ -135,6 +140,10 @@ angular.module('fishboneApp')
                       }
                   }
               },
+              onStart: function(sliderId,modelValue, highValue){
+                  console.log(modelValue);
+                  console.log(highValue);
+              },
               onChange: function(sliderId, modelValue, highValue){
                   //This is where the logic to show the modal window
                   //and pass the value of the checkpoint details related to the
@@ -152,10 +161,10 @@ angular.module('fishboneApp')
               $scope.theHost = hosts[0].id;
           });
           var oneCont = restHosts.one('570cf4d9be173d54726e954d','container');
-          var containers = oneCont.get();console.log(containers);
+          var containers = oneCont.get();//console.log(containers);
           restHosts.all('570cf4d9be173d54726e954d/container/570cf513be173d54726e9555/checkpoint').getList().then(function (checkpoint) {
               var x;
-              console.log(checkpoint.plain());
+              //console.log(checkpoint.plain());
               var checkpointsDetails = checkpoint.plain();
               $scope.checkpointDetails = checkpointsDetails;
               var points = [];
@@ -166,10 +175,10 @@ angular.module('fishboneApp')
                   }
               }
               //$rootScope.$broadcast('reCalcViewDimensions');
-              $scope.verticalSlider1.options.showTicks = true;
+              $scope.verticalSlider1.options.showTicks = 1;
               $scope.verticalSlider1.options.showTickValues = true;
               $scope.verticalSlider1.options.stepsArray = points;
-              console.log(points[0]);
+              //console.log(points[0]);
               $scope.verticalSlider1.value = points[0];
               //$scope.verticalSlider1.options.ceil = points[points.length - 1];
               $scope.verticalSlider1.maxValue = points.length - 1;
