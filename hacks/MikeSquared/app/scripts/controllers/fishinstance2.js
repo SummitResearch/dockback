@@ -89,7 +89,31 @@ angular.module('fishboneApp')
         series: [{
             allowPointSelection: true,
             name: 'Container size',
-            data: this.donutdata
+            data: (function () {
+                // generate an array of random data
+                var data = [];
+
+
+                Restangular.all('host/5706d3f9c51e2fd27904272b/container').getList().then(function(restData) {
+
+                    angular.forEach(restData, function (container) {
+
+                        Restangular.all('host/5706d3f9c51e2fd27904272b/image').getList().then(function (restData) {
+                            angular.forEach(restData, function (image) {
+                                if (image.dockerImageId == container.imageId) {
+                                    data.push({
+                                        name: container.names[0].replace(/\//,''),
+                                        y: image.size
+                                    })
+                                }
+                            })
+                        });
+
+                    });
+                });
+
+                return data;
+            }())
         }]
     }
 
@@ -124,12 +148,5 @@ angular.module('fishboneApp')
               }
           }
       };
-
-      $scope.containers2 = {};
-
-      Restangular.all('host/570cf4d9be173d54726e954d/container').getList().then(function(data){
-          console.log(data);
-          //do something with the list of students
-      });
 
   });

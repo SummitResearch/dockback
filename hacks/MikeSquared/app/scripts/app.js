@@ -51,6 +51,7 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+
       var newBaseUrl = "https://localhost:8443";
       //RestangularProvider.setDefaultHeaders({'Authorization': 'Basic YWRtaW46QXdlc29tZTEyMyE='});
       RestangularProvider.setBaseUrl(newBaseUrl);
