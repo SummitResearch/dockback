@@ -11,12 +11,6 @@
 angular.module('fishboneApp')
   .controller('FishinstanceCtrl', function ($rootScope, $scope, $timeout, Restangular, $uibModal) {
       $scope.activeTab = "fishInst";
-      this.donutdata = [
-          ['Container _1', 420],
-          ['Container_2', 310],
-          ['Container_3', 210],
-          ['Container_4', 301]
-      ];
 
       this.points = [];
 
@@ -92,7 +86,30 @@ angular.module('fishboneApp')
         series: [{
             allowPointSelection: true,
             name: 'Container size',
-            data: this.donutdata
+            data: (function () {
+                // generate an array of containers
+                var data = [];
+
+                Restangular.all('host/5706d3f9c51e2fd27904272b/container').getList().then(function(restData) {
+
+                    angular.forEach(restData, function (container) {
+
+                        Restangular.all('host/5706d3f9c51e2fd27904272b/image').getList().then(function (restData) {
+                            angular.forEach(restData, function (image) {
+                                if (image.dockerImageId == container.imageId) {
+                                    data.push({
+                                        name: container.names[0].replace(/\//,''),
+                                        y: image.size
+                                    })
+                                }
+                            })
+                        });
+
+                    });
+                });
+
+                return data;
+            }())
         }]
     }
 
