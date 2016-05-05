@@ -33,6 +33,11 @@ angular.module('fishboneApp')
                 },
                 backgroundColor: 'transparent'
             },
+            tooltip: {
+                formatter: function () {
+                    return '<b>Container:</b> ' + this.key+'<br/><b>Size:</b> '+formatSizeUnits(this.y);
+                }
+            },
             plotOptions: {
                 pie: {
                     allowPointSelect: true,
@@ -103,7 +108,7 @@ angular.module('fishboneApp')
                                 if (image.dockerImageId == container.imageId) {
                                     data.push({
                                         name: container.names[0].replace(/\//,''),
-                                        y: image.size
+                                        y: image.virtualSize
                                     })
                                 }
                             })
@@ -147,6 +152,16 @@ angular.module('fishboneApp')
                   return 'Select ' + v + ' to restore';
               }
           }
+      };
+
+      function formatSizeUnits(bytes){
+          if      (bytes>=1073741824) {bytes=(bytes/1073741824).toFixed(2)+' GB';}
+          else if (bytes>=1048576)    {bytes=(bytes/1048576).toFixed(2)+' MB';}
+          else if (bytes>=1024)       {bytes=(bytes/1024).toFixed(2)+' KB';}
+          else if (bytes>1)           {bytes=bytes+' bytes';}
+          else if (bytes==1)          {bytes=bytes+' byte';}
+          else                        {bytes='0 byte';}
+          return bytes;
       };
 
   });
