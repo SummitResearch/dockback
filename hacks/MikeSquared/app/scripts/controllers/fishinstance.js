@@ -89,16 +89,16 @@ angular.module('fishboneApp')
                 // generate an array of containers
                 var data = [];
 
-                Restangular.all('host/5706d3f9c51e2fd27904272b/container').getList().then(function(restData) {
+                Restangular.all('host/570cf4d9be173d54726e954d/container').getList().then(function(restData) {
 
                     angular.forEach(restData, function (container) {
 
-                        Restangular.all('host/5706d3f9c51e2fd27904272b/image').getList().then(function (restData) {
+                        Restangular.all('host/570cf4d9be173d54726e954d/image').getList().then(function (restData) {
                             angular.forEach(restData, function (image) {
                                 if (image.dockerImageId == container.imageId) {
                                     data.push({
                                         name: container.names[0].replace(/\//,''),
-                                        y: image.size
+                                        y: getVirtualSize(image)
                                     })
                                 }
                             })
@@ -111,7 +111,17 @@ angular.module('fishboneApp')
         }]
     };
 
-      //$scope.highchartsNG.series[0].addPoint(this.donutdata[0]);
+      //Helper to create the right format of the size
+      function getVirtualSize(image){
+          var bytes = image.virtualSize;
+          if      (bytes>=1073741824) {bytes=(bytes/1073741824).toFixed(2);}
+          else if (bytes>=1048576)    {bytes=(bytes/1048576).toFixed(2);}
+          else if (bytes>=1024)       {bytes=(bytes/1024).toFixed(2);}
+          else if (bytes>1)           {bytes=bytes;}
+          else if (bytes==1)          {bytes=bytes;}
+          else                        {bytes=0;}
+          return parseFloat(bytes);
+      }
 
       //Convenience method to swap and show slider
       function swapSlider(){
@@ -132,23 +142,21 @@ angular.module('fishboneApp')
           options: {
               stepsArray: [],
               vertical: true,
-              showTicks: true,
+              //showTicks: true,
               showTickValues: true,
               enforceStep: false,
-              ticksTooltip: function(value){
+              ticksTooltip: function(value, label){
 
                   if ($scope.checkpointDetails){
                       var x;
                       for(x in $scope.checkpointDetails){
                           if (x === value.toString()){
+                              console.log(label);
+                              //label.tick-value = 'Checkpoint creation time: ' + convertToDate($scope.checkpointDetails[x].timestamp);
                               return 'Checkpoint creation time: ' + convertToDate($scope.checkpointDetails[x].timestamp);
                           }
                       }
                   }
-              },
-              onStart: function(sliderId,modelValue, highValue){
-                  console.log(modelValue);
-                  console.log(highValue);
               },
               onChange: function(sliderId, modelValue, highValue){
                   //This is where the logic to show the modal window
@@ -165,30 +173,34 @@ angular.module('fishboneApp')
           restHosts.getList().then(function (hosts) {
               $scope.theHosts = hosts;
               $scope.theHost = hosts[0].id;
-          });
-          var oneCont = restHosts.one('570cf4d9be173d54726e954d','container');
-          var containers = oneCont.get();//console.log(containers);
-          restHosts.all('570cf4d9be173d54726e954d/container/570cf513be173d54726e9555/checkpoint').getList().then(function (checkpoint) {
-              var x;
-              //console.log(checkpoint.plain());
-              var checkpointsDetails = checkpoint.plain();
-              $scope.checkpointDetails = checkpointsDetails;
-              var points = [];
+              restHosts.all($scope.theHost).get('container').then(function(containers){
+                  console.log(containers);
+                  $scope.name = containers[1].names[0].replace(/\//,'');
+                  restHosts.all($scope.theHost + '/container/' + containers[1].id + '/checkpoint').getList().then(function (checkpoint) {
+                      var x;
+                      //console.log(checkpoint.plain());
+                      var checkpointsDetails = checkpoint.plain();
+                      $scope.checkpointDetails = checkpointsDetails;
+                      var points = [];
 
-              if (checkpointsDetails){
-                  for (var x=0; x < checkpointsDetails.length; x++){
-                     points.push(convertToDate(checkpointsDetails[x].timestamp));
-                  }
-              }
-              //$rootScope.$broadcast('reCalcViewDimensions');
-              $scope.verticalSlider1.options.showTicks = 1;
-              $scope.verticalSlider1.options.showTickValues = true;
-              $scope.verticalSlider1.options.stepsArray = points;
-              //console.log(points[0]);
-              $scope.verticalSlider1.value = points[0];
-              //$scope.verticalSlider1.options.ceil = points[points.length - 1];
-              $scope.verticalSlider1.maxValue = points.length - 1;
+                      if (checkpointsDetails){
+                          for (var x=0; x < checkpointsDetails.length; x++){
+                              points.push(convertToDate(checkpointsDetails[x].timestamp));
+                              //$scope.checkpointDetails[x].name = contValue;
+                          }
+                      }
+                      //$rootScope.$broadcast('reCalcViewDimensions');
+                      $scope.verticalSlider1.options.showTicks = 1;
+                      $scope.verticalSlider1.options.showTickValues = true;
+                      $scope.verticalSlider1.options.stepsArray = points;
+                      //console.log(points[0]);
+                      $scope.verticalSlider1.value = points[0];
+                      $scope.verticalSlider1.maxValue = points.length - 1;
+                  });
+              });
           });
+
+
       }
 
       $scope.open = function (value) {
@@ -200,7 +212,9 @@ angular.module('fishboneApp')
               //size: size,
               resolve: {
                   details: function () {
-                      return $scope.checkpointDetails[value];
+                      var deets = $scope.checkpointDetails[value];
+                      deets.name = $scope.name;
+                      return deets;
                   }
               }
           });
