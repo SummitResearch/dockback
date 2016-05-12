@@ -27,6 +27,13 @@ angular.module('fishboneApp')
                 },
                 backgroundColor: 'transparent'
             },
+            tooltip: {
+                formatter: function () {
+                    return '<b>Container:</b> ' + this.key +'<br/>'+
+                        '<b>Image: </b>' +     this.point.image + '<br/>' +
+                        '<b>Size:</b> '+      formatSizeUnits(this.y);
+                }
+            },
             plotOptions: {
                 pie: {
                     allowPointSelect: true,
@@ -89,23 +96,25 @@ angular.module('fishboneApp')
                 // generate an array of containers
                 var data = [];
 
-                Restangular.all('host/570cf4d9be173d54726e954d/container').getList().then(function(restData) {
+                Restangular.all('host').getList().then(function(hostData) {
+                    Restangular.all('host/'+hostData[0].id+'/container').getList().then(function(restData) {
+                        angular.forEach(restData, function (container) {
+                            Restangular.all('host/'+hostData[0].id+'/image').getList().then(function (restData) {
+                                angular.forEach(restData, function (image) {
+                                    if (image.dockerImageId == container.imageId) {
+                                        data.push({
+                                            name: container.names[0].replace(/\//,''),
+                                            image: container.image,
+                                            y: image.virtualSize
+                                        })
+                                    }
+                                })
+                            });
 
-                    angular.forEach(restData, function (container) {
-
-                        Restangular.all('host/570cf4d9be173d54726e954d/image').getList().then(function (restData) {
-                            angular.forEach(restData, function (image) {
-                                if (image.dockerImageId == container.imageId) {
-                                    data.push({
-                                        name: container.names[0].replace(/\//,''),
-                                        y: getVirtualSize(image)
-                                    })
-                                }
-                            })
                         });
-
                     });
                 });
+
                 return data;
             }())
         }]
@@ -240,5 +249,14 @@ angular.module('fishboneApp')
                   + date.getMilliseconds()
       }
 
+      function formatSizeUnits(bytes){
+          if      (bytes>=1073741824) {bytes=(bytes/1073741824).toFixed(2)+' GB';}
+          else if (bytes>=1048576)    {bytes=(bytes/1048576).toFixed(2)+' MB';}
+          else if (bytes>=1024)       {bytes=(bytes/1024).toFixed(2)+' KB';}
+          else if (bytes>1)           {bytes=bytes+' bytes';}
+          else if (bytes==1)          {bytes=bytes+' byte';}
+          else                        {bytes='0 byte';}
+          return bytes;
+      };
 
   });
